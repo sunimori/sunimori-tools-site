@@ -98,7 +98,7 @@
 
   <header>
     <h1>Java Impact Analyzer</h1>
-    <span class="ver" id="ver">1.0.0.202608240909</span>
+    <span class="ver" id="ver">1.0.0.202608241119</span>
     <nav class="lang" id="lang">
       <button data-set="ja" aria-pressed="true">日本語</button>
       <button data-set="zh" aria-pressed="false">中文</button>
@@ -174,6 +174,69 @@
     <li data-l="zh">提示重启时重启</li>
     <li data-l="en">Restart when prompted</li>
   </ol>
+
+  <h2>
+    <span data-l="ja" class="on">署名の確認（初回に一度）</span>
+    <span data-l="zh">确认签名（首次一次）</span>
+    <span data-l="en">Trusting the signature (once)</span>
+  </h2>
+
+  <p>
+    <span data-l="ja" class="on">インストールの途中で<b>証明書を信頼するか</b>訊かれます。
+      下の指紋と合っていれば信頼してください。一度信頼すれば、以後の更新では
+      <b>二度と訊かれません</b>。</span>
+    <span data-l="zh">安装过程中会问你<b>是否信任证书</b>。与下面的指纹一致就信任它。
+      信任一次之后，以后的更新<b>不会再询问</b>。</span>
+    <span data-l="en">The install asks whether to <b>trust the certificate</b>. Trust it if the
+      fingerprint matches the one below. Once trusted, updates never ask again.</span>
+  </p>
+
+  <div class="url">
+    <code id="fp">SHA-256: 34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32:40:4A:69:A4:B3:EF:90:66:6A:0B:DE:0B:49:BB:23:32</code>
+  </div>
+  <p style="color:var(--ink-soft);font-size:13px;margin-top:4px">
+    <span data-l="ja" class="on">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</span>
+    <span data-l="zh">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</span>
+    <span data-l="en">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</span>
+  </p>
+
+  <div class="note">
+    <span data-l="ja" class="on"><b>信頼した後で証明書を訊かれたら、そこで止めてください。</b>
+      正しい更新なら二度と出ません。出るという事は、配っている物が別の鍵で署名されたか、
+      署名が無いという事です。</span>
+    <span data-l="zh"><b>信任之后如果又被问证书，请停下来。</b>
+      正常更新不会再出现这个框。出现了就意味着分发的内容换了别的密钥签名，或者根本没签名。</span>
+    <span data-l="en"><b>If a certificate prompt appears after that first time, stop.</b>
+      A legitimate update never asks again. A prompt means what is being served was signed
+      with a different key, or not signed at all.</span>
+  </div>
+
+  <h2>
+    <span data-l="ja" class="on">未署名の物を拒む設定（任意、推奨）</span>
+    <span data-l="zh">拒绝未签名内容（可选，推荐）</span>
+    <span data-l="en">Refuse unsigned content (optional, recommended)</span>
+  </h2>
+
+  <p>
+    <span data-l="ja" class="on">Eclipse の <code class="inline">eclipse.ini</code> に次の 1 行を足すと、
+      署名の無い物は<b>警告ではなく失敗</b>になります。押し通せなくなるので、
+      すり替えに気付かず入れてしまう事がなくなります。</span>
+    <span data-l="zh">在 Eclipse 的 <code class="inline">eclipse.ini</code> 里加这一行，
+      未签名的内容会<b>直接安装失败</b>而不是弹警告 —— 没有「仍然继续」可点，
+      也就不会在没察觉的情况下装上被替换的内容。</span>
+    <span data-l="en">Add this line to <code class="inline">eclipse.ini</code> and unsigned content
+      <b>fails</b> instead of warning. There is no way to click past it, so a swapped
+      artifact cannot be installed unnoticed.</span>
+  </p>
+
+  <div class="url">
+    <code id="ini">-Declipse.p2.unsignedPolicy=fail</code>
+    <button id="copyini" type="button">
+      <span data-l="ja" class="on">コピー</span>
+      <span data-l="zh">复制</span>
+      <span data-l="en">Copy</span>
+    </button>
+  </div>
 
   <h2>
     <span data-l="ja" class="on">更新</span>
@@ -254,6 +317,21 @@
     saved = nav.indexOf('zh') === 0 ? 'zh' : nav.indexOf('en') === 0 ? 'en' : 'ja';
   }
   pick(saved);
+
+  function wireCopy(btnId, srcId) {
+    var b = document.getElementById(btnId);
+    if (!b) { return; }
+    b.addEventListener('click', function () {
+      var text = document.getElementById(srcId).textContent.trim();
+      var done = function () {
+        b.classList.add('done');
+        setTimeout(function () { b.classList.remove('done'); }, 1200);
+      };
+      if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, done); }
+      else { done(); }
+    });
+  }
+  wireCopy('copyini', 'ini');
 
   var copy = document.getElementById('copy');
   copy.addEventListener('click', function () {
