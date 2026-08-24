@@ -64,10 +64,43 @@
     pointer-events: none;
     z-index: 0;
   }
-  .wrap { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 24px 110px; }
+  /* ---------- 版面 ----------
+     広い画面では左に「まず要る物」(名前・版・更新サイトの URL)を貼り付け、
+     右に読み物を流す。1 本の細長い帯にすると、画面の大半が余白になる一方で
+     文章は却って読みにくい ―― 幅は<b>用途で分ける</b>。 */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    backdrop-filter: saturate(1.6) blur(10px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .topbar.stuck { border-bottom-color: var(--line); }
+  .topbar-inner {
+    max-width: 1160px; margin: 0 auto; padding: 14px 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .wrap {
+    position: relative; z-index: 1;
+    max-width: 1160px; margin: 0 auto; padding: 0 32px 120px;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 0;
+  }
+  @media (min-width: 1000px) {
+    .wrap {
+      grid-template-columns: 360px minmax(0, 1fr);
+      column-gap: 72px;
+      align-items: start;
+    }
+    .rail { position: sticky; top: 72px; padding-top: 56px; }
+    .main { padding-top: 56px; }
+    .main > section:first-child { margin-top: 0; }
+  }
+  @media (max-width: 999px) {
+    .topbar-inner, .wrap { padding-left: 24px; padding-right: 24px; }
+    .rail { padding-top: 34px; }
+  }
 
-  /* ---------- 見出し帯 ---------- */
-  header { display: flex; align-items: center; gap: 12px; padding: 26px 0 0; }
+  header { display: flex; align-items: center; gap: 12px; }
   .mark {
     width: 34px; height: 34px; flex: none; border-radius: 9px;
     background: linear-gradient(150deg, var(--accent-2), var(--accent));
@@ -111,10 +144,10 @@
   .lang-menu .sub { margin-left: auto; font-size: 11px; color: var(--ink-3); letter-spacing: .04em; }
 
   /* ---------- 冒頭 ---------- */
-  .hero { padding: 46px 0 8px; }
+  .hero { padding: 0 0 8px; }
   h1 { font-size: clamp(30px, 6vw, 40px); line-height: 1.15; letter-spacing: -.025em;
        font-weight: 640; margin: 0 0 14px; }
-  .lede { font-size: 16px; color: var(--ink-2); margin: 0 0 20px; max-width: 60ch; }
+  .lede { font-size: 16px; color: var(--ink-2); margin: 0 0 20px; max-width: 62ch; }
   .pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .pill {
     display: inline-flex; align-items: center; gap: 6px;
@@ -127,6 +160,13 @@
 
   /* ---------- 節 ---------- */
   section { margin-top: 46px; }
+  .main > section:first-of-type { margin-top: 0; }
+  .rail .rail-site { margin-top: 30px; }
+  .rail .eyebrow { margin-bottom: 10px; }
+  /* 下段の 3 枚は、幅が有る時は横に並べる */
+  .cards { display: grid; gap: 12px; }
+  @media (min-width: 620px) { .cards { grid-template-columns: 1fr 1fr; } }
+  .cards .card { margin: 0; }
   .eyebrow {
     display: flex; align-items: center; gap: 8px;
     font-size: 11px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase;
@@ -215,9 +255,8 @@
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <header>
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
     <span class="mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
            stroke-linecap="round" stroke-linejoin="round">
@@ -240,8 +279,12 @@
       </button>
       <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn"></div>
     </div>
-  </header>
+  </div>
+</div>
 
+<div class="wrap">
+
+  <aside class="rail">
   <div class="hero">
     <h1>Java Impact Analyzer</h1>
     <p class="lede" data-i18n="lede"></p>
@@ -258,14 +301,13 @@
     </div>
   </div>
 
-  <section>
+  <div class="rail-site">
     <p class="eyebrow">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       <span data-i18n="eyebrowSite"></span>
     </p>
-    <h2 data-i18n="siteTitle"></h2>
-    <p data-i18n="siteBody"></p>
+    <p style="margin:0 0 6px" data-i18n="siteBody"></p>
     <div class="copy-row">
       <code id="siteUrl">https://sunimori.tools/eclipse/impact-analyzer/</code>
       <button class="copy-btn" type="button" data-copy="siteUrl">
@@ -276,7 +318,10 @@
         <span data-i18n="copy">Copy</span>
       </button>
     </div>
-  </section>
+  </div>
+  </aside>
+
+  <main class="main">
 
   <section>
     <p class="eyebrow">
@@ -370,7 +415,7 @@
     <p data-i18n="updateBody"></p>
   </section>
 
-  <section>
+  <section class="cards">
     <div class="card">
       <h2 style="font-size:16px" data-i18n="reqTitle"></h2>
       <p style="margin:0" data-i18n="reqBody"></p>
@@ -384,6 +429,8 @@
       <p style="margin:0" data-i18n="supportBody"></p>
     </div>
   </section>
+
+  </main>
 </div>
 
 <script>
@@ -647,6 +694,13 @@
     saved = hit ? hit.id : "ja";
   }
   pick(saved);
+
+  // 帯は、少しでも巻いたら下辺の線を出す。常に出しておくと、
+  // 一番上に居る時に画面を無意味に二分してしまう
+  var topbar = document.getElementById("topbar");
+  var onScroll = function () { topbar.classList.toggle("stuck", window.scrollY > 4); };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
   // ---- 写す釦 ----
   document.querySelectorAll("[data-copy]").forEach(function (b) {
