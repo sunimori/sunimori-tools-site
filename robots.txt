@@ -1,2 +1,6 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# 収録させない指示は各頁の <meta name="robots" content="noindex"> で出す。
+# ここで抓取そのものを止めると、爬虫はその指示を読めないまま
+# URL だけを検索結果へ載せる事がある ―― 逆効果になる。
