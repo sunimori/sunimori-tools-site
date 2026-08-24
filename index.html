@@ -8,24 +8,24 @@
 <style>
   :root {
     color-scheme: light dark;
-    --bg: #fafbfc;  --glow: 47 109 179;
-    --surface: #ffffff;  --surface-2: #f3f5f8;  --raise: #ffffff;
-    --line: #e5e8ed;  --line-soft: #eef0f4;
-    --ink: #13161a;  --ink-2: #4b535d;  --ink-3: #828a95;
-    --accent: #2b61a7;  --accent-2: #3f7fd0;  --accent-wash: #eef4fc;
-    --ok: #1d7549;  --warn: #96610f;
-    --shadow: 0 1px 2px rgba(16,24,40,.04), 0 10px 30px -18px rgba(16,24,40,.28);
-    --r: 16px;
+    --bg: #fbfbfd;  --glow: 60 118 190;
+    --card: #ffffff;  --sunk: #f2f4f8;  --raise: #ffffff;
+    --line: rgba(16, 24, 40, .10);  --line-2: rgba(16, 24, 40, .06);
+    --ink: #101319;  --ink-2: #4a525d;  --ink-3: #838b97;
+    --accent: #2b61a7;  --accent-2: #3f7fd0;  --wash: rgba(63, 127, 208, .10);
+    --ok: #157a49;  --warn: #8f5c0c;
+    --lift: 0 1px 2px rgba(16,24,40,.04), 0 14px 34px -22px rgba(16,24,40,.35);
+    --r: 18px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0d1014;  --glow: 116 172 234;
-      --surface: #14181e;  --surface-2: #191e25;  --raise: #171c22;
-      --line: #242a33;  --line-soft: #1e232a;
-      --ink: #e9edf2;  --ink-2: #a6afbb;  --ink-3: #767f8b;
-      --accent: #7cb3f0;  --accent-2: #9ac8fa;  --accent-wash: #15202d;
-      --ok: #5fc189;  --warn: #d6a340;
-      --shadow: 0 1px 0 rgba(255,255,255,.02) inset;
+      --bg: #0b0e12;  --glow: 122 176 236;
+      --card: #12161c;  --sunk: #0e1218;  --raise: #161b22;
+      --line: rgba(255, 255, 255, .09);  --line-2: rgba(255, 255, 255, .05);
+      --ink: #eaeef4;  --ink-2: #a3acb9;  --ink-3: #737d8a;
+      --accent: #7fb4ef;  --accent-2: #9dc9fa;  --wash: rgba(127, 180, 239, .12);
+      --ok: #5ec288;  --warn: #d8a544;
+      --lift: 0 1px 0 rgba(255,255,255,.03) inset;
     }
   }
   * { box-sizing: border-box; }
@@ -37,172 +37,174 @@
     -webkit-font-smoothing: antialiased;
   }
   body::before {
-    content: ""; position: fixed; inset: 0 0 auto 0; height: 520px; pointer-events: none; z-index: 0;
+    content: ""; position: fixed; inset: 0 0 auto 0; height: 620px; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(52% 60% at 50% -8%, rgb(var(--glow) / .16), transparent 68%),
-      radial-gradient(30% 40% at 88% 4%, rgb(var(--glow) / .07), transparent 70%);
+      radial-gradient(48% 58% at 50% -10%, rgb(var(--glow) / .17), transparent 66%),
+      radial-gradient(26% 36% at 12% 2%, rgb(var(--glow) / .07), transparent 70%),
+      radial-gradient(26% 36% at 88% 6%, rgb(var(--glow) / .06), transparent 70%);
   }
   .shell { position: relative; z-index: 1; }
-  .bound { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
 
-  /* -- 帯 -- */
+  /* 幅は固定しない。器は画面に合わせて伸び、読み物だけ別に上限を持つ */
+  .bound { width: min(1400px, 100%); margin: 0 auto; padding-inline: clamp(20px, 4vw, 52px); }
+
+  /* ── 帯 ── */
   .bar {
     position: sticky; top: 0; z-index: 40;
-    background: color-mix(in srgb, var(--bg) 80%, transparent);
-    backdrop-filter: saturate(1.7) blur(12px);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: saturate(1.8) blur(14px);
     border-bottom: 1px solid transparent; transition: border-color .2s;
   }
   .bar.stuck { border-bottom-color: var(--line); }
-  .bar .bound { display: flex; align-items: center; gap: 11px; height: 62px; }
+  .bar .bound { display: flex; align-items: center; gap: 11px; height: 64px; }
   .mark {
-    width: 32px; height: 32px; flex: none; border-radius: 9px; color: #fff;
-    background: linear-gradient(150deg, var(--accent-2), var(--accent));
-    display: grid; place-items: center; box-shadow: 0 3px 10px -3px rgb(var(--glow) / .55);
+    width: 32px; height: 32px; flex: none; border-radius: 10px; color: #fff;
+    background: linear-gradient(148deg, var(--accent-2), var(--accent));
+    display: grid; place-items: center; box-shadow: 0 4px 12px -4px rgb(var(--glow) / .6);
   }
   .mark svg { width: 18px; height: 18px; }
-  .brand { font-weight: 600; letter-spacing: -.01em; }
+  .brand { font-weight: 600; letter-spacing: -.012em; }
   .grow { flex: 1; }
 
-  /* -- 言語 -- */
+  /* ── 言語 ── */
   .lang { position: relative; }
   .lang-btn {
     display: flex; align-items: center; gap: 6px; font: inherit; font-size: 13px;
-    color: var(--ink-2); cursor: pointer; background: var(--surface);
-    border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px;
-    transition: border-color .15s, color .15s;
+    color: var(--ink-2); cursor: pointer; background: transparent;
+    border: 1px solid var(--line); border-radius: 11px; padding: 7px 11px;
+    transition: border-color .16s, color .16s, background .16s;
   }
-  .lang-btn:hover { color: var(--ink); border-color: var(--ink-3); }
+  .lang-btn:hover { color: var(--ink); background: var(--card); border-color: var(--ink-3); }
   .lang-btn > svg:first-child { width: 16px; height: 16px; }
-  .lang-btn .chev { width: 12px; height: 12px; opacity: .6; transition: transform .18s; }
+  .lang-btn .chev { width: 12px; height: 12px; opacity: .55; transition: transform .18s; }
   .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
   .lang-menu {
-    position: absolute; top: calc(100% + 7px); right: 0; z-index: 50; min-width: 184px; padding: 6px;
-    background: var(--raise); border: 1px solid var(--line); border-radius: 13px;
-    box-shadow: 0 10px 34px -10px rgba(8,12,18,.4); display: none;
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; min-width: 188px; padding: 6px;
+    background: var(--raise); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 14px 40px -12px rgba(6, 10, 16, .45); display: none;
   }
   .lang-menu.open { display: block; }
   .lang-menu button {
     display: flex; align-items: center; gap: 9px; width: 100%; font: inherit; font-size: 14px;
     text-align: left; cursor: pointer; color: var(--ink-2); background: none; border: 0;
-    border-radius: 9px; padding: 8px 9px;
+    border-radius: 10px; padding: 8px 10px;
   }
-  .lang-menu button:hover { background: var(--surface-2); color: var(--ink); }
+  .lang-menu button:hover { background: var(--sunk); color: var(--ink); }
   .lang-menu button[aria-checked="true"] { color: var(--accent); font-weight: 600; }
   .lang-menu .tick { width: 14px; height: 14px; flex: none; opacity: 0; }
   .lang-menu button[aria-checked="true"] .tick { opacity: 1; }
   .lang-menu .sub { margin-left: auto; font-size: 11px; color: var(--ink-3); letter-spacing: .05em; }
 
-  /* -- 冒頭 -- */
-  .hero { text-align: center; padding: 76px 0 44px; }
+  /* ── 冒頭 ── */
+  .hero { text-align: center; padding: clamp(56px, 9vw, 104px) 0 clamp(30px, 4vw, 46px); }
   h1 {
-    font-size: clamp(34px, 5.4vw, 52px); line-height: 1.08; letter-spacing: -.032em;
-    font-weight: 650; margin: 0 0 16px;
+    font-size: clamp(36px, 6vw, 60px); line-height: 1.04; letter-spacing: -.036em;
+    font-weight: 660; margin: 0 0 18px;
+    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 68%, var(--bg)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .lede { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0 auto 24px; max-width: 58ch; }
-  .pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .lede {
+    font-size: clamp(15.5px, 1.5vw, 18px); line-height: 1.62; color: var(--ink-2);
+    margin: 0 auto; max-width: 60ch;
+  }
+
+  /* 主役: 更新サイトの URL。冒頭のすぐ下に、入力欄の顔で置く */
+  .cta { margin: clamp(26px, 3.4vw, 38px) auto 0; max-width: 720px; }
+  .field {
+    position: relative; display: flex; align-items: center;
+    background: var(--sunk); border: 1px solid var(--line);
+    border-radius: 13px; transition: border-color .16s;
+  }
+  .field:hover, .field:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .field code {
+    flex: 1; min-width: 0; padding: 13px 52px 13px 16px; overflow-x: auto; text-align: left;
+    white-space: nowrap; color: var(--ink);
+    font: 13.5px/1.6 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+  }
+  .field.wrap code { white-space: pre; }
+  .ghost {
+    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 32px; flex: none; display: grid; place-items: center; cursor: pointer;
+    color: var(--ink-3); background: transparent; border: 1px solid transparent; border-radius: 9px;
+    transition: color .15s, background .15s, border-color .15s;
+  }
+  .ghost:hover { color: var(--ink); background: var(--card); border-color: var(--line); }
+  .ghost svg { width: 16px; height: 16px; }
+  .ghost .ic-done { display: none; }
+  .ghost.done { color: var(--ok); }
+  .ghost.done .ic-copy { display: none; }
+  .ghost.done .ic-done { display: block; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
   .pill {
     display: inline-flex; align-items: center; gap: 6px;
-    font: 12px/1 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
-    color: var(--ink-2); background: var(--surface); border: 1px solid var(--line);
+    font: 11.5px/1 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    color: var(--ink-3); background: transparent; border: 1px solid var(--line);
     border-radius: 999px; padding: 7px 12px;
   }
-  .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 34%, var(--line)); }
+  .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 32%, transparent); }
   .pill svg { width: 13px; height: 13px; }
 
-  /* -- 主役の一枚 -- */
-  .primary {
-    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
-    padding: 22px 24px; box-shadow: var(--shadow);
-    background-image: linear-gradient(180deg, rgb(var(--glow) / .05), transparent 60%);
-  }
+  /* ── 格子: 列の数は画面が決める ── */
+  .grid { display: grid; gap: clamp(14px, 1.4vw, 20px); align-items: start; }
+  .grid + .grid { margin-top: clamp(14px, 1.4vw, 20px); }
+  .grid.wide { grid-template-columns: repeat(auto-fit, minmax(min(430px, 100%), 1fr)); }
+  .grid.slim { grid-template-columns: repeat(auto-fit, minmax(min(268px, 100%), 1fr)); }
+  .grid > * { min-width: 0; }
 
-  /* -- 格子 -- */
-  .grid { display: grid; gap: 16px; margin-top: 16px; align-items: start; }
-  /* 格子の子は既定で min-width: auto ―― 等幅の塊が入っていると、
-     縮まずに画面の外へはみ出す。横に巻かせるならここを 0 にしておく */
-  .grid > *, .card, .primary, .copy-row { min-width: 0; }
-  @media (min-width: 860px) {
-    /* minmax(0,...) が要る。既定の 1fr は中身の最小幅より縮まないので、
-       等幅コードの塊が入っている列だけ広がって、二列が揃わない */
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  }
   .card {
-    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
-    padding: 22px 24px; box-shadow: var(--shadow);
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    padding: clamp(20px, 2vw, 26px); box-shadow: var(--lift);
+    transition: border-color .18s, transform .18s;
   }
-
-  .eyebrow {
-    display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 650;
-    letter-spacing: .11em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 11px;
+  .card:hover { border-color: color-mix(in srgb, var(--accent) 26%, var(--line)); }
+  .ch { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .ci {
+    width: 30px; height: 30px; flex: none; border-radius: 9px; display: grid; place-items: center;
+    color: var(--accent); background: var(--wash);
   }
-  .eyebrow svg { width: 14px; height: 14px; }
-  h2 { font-size: 18px; letter-spacing: -.012em; font-weight: 620; margin: 0 0 9px; }
-  .card h2 { font-size: 16.5px; }
+  .ci svg { width: 16px; height: 16px; }
+  h2 { font-size: 16.5px; letter-spacing: -.012em; font-weight: 620; margin: 0; }
   p { margin: 0 0 11px; color: var(--ink-2); }
   p:last-child { margin-bottom: 0; }
   p strong, li strong { color: var(--ink); font-weight: 600; }
-
-  /* -- 写せる欄 -- */
-  .copy-row {
-    display: flex; align-items: stretch; gap: 8px; margin-top: 12px;
-    background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 5px;
-  }
-  .copy-row code {
-    flex: 1; min-width: 0; padding: 10px 12px; overflow-x: auto;
-    font: 13px/1.65 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; color: var(--ink);
-  }
-  .copy-row.nowrap code { white-space: nowrap; }
-  .copy-btn {
-    display: flex; align-items: center; gap: 6px; flex: none; font: inherit; font-size: 13px;
-    font-weight: 550; cursor: pointer; color: #fff; background: var(--accent); border: 0;
-    border-radius: 9px; padding: 0 16px; transition: background .15s;
-  }
-  .copy-btn:hover { background: var(--accent-2); }
-  .copy-btn.done { background: var(--ok); }
-  .copy-btn svg { width: 14px; height: 14px; }
+  .muted { color: var(--ink-3); font-size: 13px; }
   code.i {
-    background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 5px;
-    padding: 1px 5px; font: 12.5px ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    background: var(--sunk); border: 1px solid var(--line-2); border-radius: 5px; padding: 1px 5px;
+    font: 12.5px ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
     color: var(--ink); word-break: break-all;
   }
+  .card .field { margin-top: 12px; }
 
-  /* -- 手順 -- */
-  ol.steps { list-style: none; counter-reset: s; margin: 14px 0 0; padding: 0; }
-  ol.steps li { counter-increment: s; position: relative; padding: 0 0 15px 34px; color: var(--ink-2); }
+  /* ── 手順 ── */
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 16px 34px; color: var(--ink-2); }
   ol.steps li::before {
-    content: counter(s); position: absolute; left: 0; top: 0;
-    width: 23px; height: 23px; border-radius: 50%; display: grid; place-items: center;
-    font-size: 11.5px; font-weight: 650; color: var(--accent); background: var(--accent-wash);
-    border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+    content: counter(s); position: absolute; left: 0; top: 1px;
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 11px; font-weight: 650; color: var(--accent); background: var(--wash);
   }
   ol.steps li::after {
-    content: ""; position: absolute; left: 11px; top: 27px; bottom: 2px; width: 1px; background: var(--line);
+    content: ""; position: absolute; left: 10.5px; top: 26px; bottom: 3px; width: 1px;
+    background: var(--line);
   }
   ol.steps li:last-child { padding-bottom: 0; }
   ol.steps li:last-child::after { display: none; }
 
-  /* -- 但し書き -- */
+  /* ── 但し書き ── */
   .note {
-    display: flex; gap: 10px; margin-top: 14px; padding: 13px 15px; font-size: 13.5px;
-    color: var(--ink-2); background: var(--surface-2);
-    border: 1px solid var(--line); border-left: 3px solid var(--warn);
-    border-radius: 4px 12px 12px 4px;
+    display: flex; gap: 10px; margin-top: 14px; padding: 12px 14px; font-size: 13.5px;
+    color: var(--ink-2); background: color-mix(in srgb, var(--warn) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warn) 22%, transparent); border-radius: 12px;
   }
   .note svg { width: 15px; height: 15px; flex: none; margin-top: 4px; color: var(--warn); }
 
-  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 38%, transparent);
       text-underline-offset: 2px; }
   a:hover { text-decoration-color: currentColor; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
-  .tail { height: 90px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+  .tail { height: clamp(60px, 8vw, 120px); }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-  @media (max-width: 560px) {
-    .bound { padding: 0 18px; }
-    .hero { padding: 52px 0 34px; }
-    .copy-row { flex-wrap: wrap; }
-    .copy-btn { width: 100%; padding: 10px; justify-content: center; }
-  }
 </style>
 </head>
 <body>
@@ -236,6 +238,15 @@
     <div class="hero">
       <h1>Java Impact Analyzer</h1>
       <p class="lede" data-i18n="lede"></p>
+      <div class="cta">
+      <div class="field">
+<code id="siteUrl">https://sunimori.tools/eclipse/impact-analyzer/</code>
+        <button class="ghost" type="button" data-copy="siteUrl" data-i18n-title="copy" aria-label="Copy">
+          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </button>
+      </div>
+      </div>
       <div class="pills">
         <span class="pill" id="ver">1.0.0.202608241233</span>
         <span class="pill ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-i18n="signed">signed</span></span>
@@ -243,22 +254,11 @@
       </div>
     </div>
 
-    <div class="primary">
-        <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span data-i18n="eyebrowSite"></span></p>
-        <h2 data-i18n="siteTitle"></h2>
-        <p data-i18n="siteBody"></p>
-        <div class="copy-row nowrap">
-          <code id="siteUrl">https://sunimori.tools/eclipse/impact-analyzer/</code>
-          <button class="copy-btn" type="button" data-copy="siteUrl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span data-i18n="copy">Copy</span></button>
-        </div>
-    </div>
-
-    <div class="grid two">
+    <div class="grid wide">
       <div class="card">
-        <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg><span data-i18n="eyebrowInstall"></span></p>
-        <h2 data-i18n="installTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg></span><h2 data-i18n="installTitle"></h2></div>
         <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6"/><path d="M12 3 2 20h20z"/></svg><span data-i18n="dropins"></span></div>
-        <ol class="steps">
+        <ol class="steps" style="margin-top:16px">
           <li data-i18n="step1"></li>
           <li data-i18n="step2"></li>
           <li data-i18n="step3"></li>
@@ -267,49 +267,51 @@
       </div>
 
       <div class="card">
-        <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-i18n="eyebrowTrust"></span></p>
-        <h2 data-i18n="trustTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h2 data-i18n="trustTitle"></h2></div>
         <p data-i18n="trustBody"></p>
-        <p style="margin:14px 0 0;font-size:13px;color:var(--ink-3)">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</p>
-        <div class="copy-row">
-<code id="fp" style="white-space:pre">34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32
+        <p class="muted" style="margin:14px 0 0">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</p>
+      <div class="field wrap">
+<code id="fp">34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32
 40:4A:69:A4:B3:EF:90:66:6A:0B:DE:0B:49:BB:23:32</code>
-          <button class="copy-btn" type="button" data-copy="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span data-i18n="copy">Copy</span></button>
-        </div>
+        <button class="ghost" type="button" data-copy="fp" data-i18n-title="copy" aria-label="Copy">
+          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </button>
+      </div>
         <p style="margin:13px 0 0;font-size:13.5px" data-i18n="fpChannel"></p>
         <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6"/><path d="M12 3 2 20h20z"/></svg><span data-i18n="trustNote"></span></div>
       </div>
     </div>
 
-    <div class="grid two">
+    <div class="grid wide">
       <div class="card">
-        <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M8 10l3 2-3 2"/><path d="M13 14h4"/></svg><span data-i18n="eyebrowHarden"></span></p>
-        <h2 data-i18n="hardenTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M8 10l3 2-3 2"/><path d="M13 14h4"/></svg></span><h2 data-i18n="hardenTitle"></h2></div>
         <p data-i18n="hardenBody"></p>
-        <div class="copy-row nowrap">
-          <code id="ini">-Declipse.p2.unsignedPolicy=fail</code>
-          <button class="copy-btn" type="button" data-copy="ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span data-i18n="copy">Copy</span></button>
-        </div>
+      <div class="field">
+<code id="ini">-Declipse.p2.unsignedPolicy=fail</code>
+        <button class="ghost" type="button" data-copy="ini" data-i18n-title="copy" aria-label="Copy">
+          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </button>
       </div>
-
+      </div>
       <div class="card">
-        <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/></svg><span data-i18n="eyebrowUpdate"></span></p>
-        <h2 data-i18n="updateTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/></svg></span><h2 data-i18n="updateTitle"></h2></div>
         <p data-i18n="updateBody"></p>
       </div>
     </div>
 
-    <div class="grid three">
+    <div class="grid slim">
       <div class="card">
-        <h2 data-i18n="reqTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></span><h2 data-i18n="reqTitle"></h2></div>
         <p data-i18n="reqBody"></p>
       </div>
       <div class="card">
-        <h2 data-i18n="offlineTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v9a2 2 0 0 1-1.1 1.8l-7 3.4a2 2 0 0 1-1.8 0l-7-3.4A2 2 0 0 1 3 17V8"/><path d="M3.3 7.3 12 11l8.7-3.7L12 3z"/><path d="M12 11v11"/></svg></span><h2 data-i18n="offlineTitle"></h2></div>
         <p data-i18n="offlineBody"></p>
       </div>
       <div class="card">
-        <h2 data-i18n="supportTitle"></h2>
+      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span><h2 data-i18n="supportTitle"></h2></div>
         <p data-i18n="supportBody"></p>
       </div>
     </div>
@@ -543,6 +545,11 @@
       var v = t[el.getAttribute("data-i18n")];
       if (v != null) { el.innerHTML = v; }
     });
+    // 絵だけの釦は、題名で何をする物か伝える
+    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+      var v = t[el.getAttribute("data-i18n-title")];
+      if (v != null) { el.title = v; el.setAttribute("aria-label", v); }
+    });
     var meta = LANGS.filter(function (l) { return l.id === lang; })[0];
     now.textContent = meta ? meta.name : lang;
     menu.querySelectorAll("button").forEach(function (b) {
@@ -566,9 +573,7 @@
   document.addEventListener("click", function (e) {
     if (!menu.contains(e.target) && !btn.contains(e.target)) { close(); }
   });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { close(); }
-  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { close(); } });
 
   // 起動時の言語: 前回の選択 → 閲覧環境の設定 → 日本語
   var saved = null;
@@ -582,8 +587,8 @@
 
   // 帯は、少しでも巻いたら下辺の線を出す。常に出しておくと、
   // 一番上に居る時に画面を無意味に二分してしまう
-  var topbar = document.getElementById("bar");
-  var onScroll = function () { topbar.classList.toggle("stuck", window.scrollY > 4); };
+  var bar = document.getElementById("bar");
+  var onScroll = function () { bar.classList.toggle("stuck", window.scrollY > 4); };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
@@ -592,15 +597,9 @@
     b.addEventListener("click", function () {
       var src = document.getElementById(b.getAttribute("data-copy"));
       var text = src.textContent.replace(/\s*\n\s*/g, " ").trim();
-      var label = b.querySelector("[data-i18n]");
-      var back = label ? label.innerHTML : "";
       var done = function () {
         b.classList.add("done");
-        if (label) { label.innerHTML = (T[current] || T.en).copied; }
-        setTimeout(function () {
-          b.classList.remove("done");
-          if (label) { label.innerHTML = back; }
-        }, 1400);
+        setTimeout(function () { b.classList.remove("done"); }, 1400);
       };
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(done, done);
