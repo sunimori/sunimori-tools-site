@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Java Impact Analyzer</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #f6f7f9;
+    --panel-line: #e3e6ea;
+    --ink: #16191d;
+    --ink-soft: #5b636d;
+    --accent: #2f6db3;
+    --accent-soft: #eaf1fa;
+    --code-bg: #eef1f5;
+    --ok: #2c7a4b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16191d;
+      --panel: #1e2228;
+      --panel-line: #2e343c;
+      --ink: #e6e9ed;
+      --ink-soft: #99a2ad;
+      --accent: #6ea8e8;
+      --accent-soft: #1c2836;
+      --code-bg: #12151a;
+      --ok: #66c08a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.7 -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN",
+          "Yu Gothic UI", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 22px 80px; }
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  h1 { font-size: 26px; margin: 0; letter-spacing: -.01em; }
+  .ver {
+    font: 12px/1 ui-monospace, "SF Mono", Consolas, monospace;
+    color: var(--ink-soft); background: var(--panel); border: 1px solid var(--panel-line);
+    border-radius: 999px; padding: 5px 10px;
+  }
+  .lang { margin-left: auto; display: flex; gap: 2px; }
+  .lang button {
+    font: inherit; font-size: 12px; cursor: pointer; color: var(--ink-soft);
+    background: transparent; border: 1px solid transparent; border-radius: 6px;
+    padding: 4px 9px;
+  }
+  .lang button[aria-pressed="true"] {
+    color: var(--accent); background: var(--accent-soft); border-color: var(--panel-line);
+  }
+  .lede { color: var(--ink-soft); margin: 10px 0 32px; }
+  h2 { font-size: 15px; margin: 34px 0 12px; letter-spacing: .02em; }
+  ol { padding-left: 20px; margin: 0; }
+  ol li { margin: 7px 0; }
+  .url {
+    display: flex; gap: 8px; align-items: stretch;
+    background: var(--panel); border: 1px solid var(--panel-line);
+    border-radius: 10px; padding: 6px; margin: 6px 0 4px;
+  }
+  .url code {
+    flex: 1; padding: 9px 12px; overflow-x: auto; white-space: nowrap;
+    font: 13px/1.5 ui-monospace, "SF Mono", Consolas, monospace; color: var(--ink);
+  }
+  .url button {
+    font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap;
+    background: var(--accent); color: #fff; border: 0; border-radius: 7px; padding: 0 16px;
+  }
+  .url button.done { background: var(--ok); }
+  code.inline {
+    background: var(--code-bg); border-radius: 5px; padding: 2px 6px;
+    font: 13px ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  .note {
+    border-left: 3px solid var(--accent); background: var(--panel);
+    border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0; color: var(--ink-soft);
+  }
+  .note b { color: var(--ink); }
+  a { color: var(--accent); }
+  footer {
+    margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--panel-line);
+    color: var(--ink-soft); font-size: 13px;
+  }
+  [data-l] { display: none; }
+  [data-l].on { display: revert; }
+  li[data-l].on, p[data-l].on, div[data-l].on { display: block; }
+  span[data-l].on { display: inline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Java Impact Analyzer</h1>
+    <span class="ver" id="ver">1.0.0.202608240909</span>
+    <nav class="lang" id="lang">
+      <button data-set="ja" aria-pressed="true">日本語</button>
+      <button data-set="zh" aria-pressed="false">中文</button>
+      <button data-set="en" aria-pressed="false">English</button>
+    </nav>
+  </header>
+
+  <p class="lede">
+    <span data-l="ja" class="on">Eclipse 用の変更影響調査プラグイン。呼び出し元の追跡、entity / table の削除調査、
+      横断成果物（JSP・mapper・SQL）の解析。<b>解析は一切ネットワークへ出ない。</b></span>
+    <span data-l="zh">Eclipse 变更影响分析插件。调用链追踪、entity / table 删除调查、
+      跨制品（JSP / mapper / SQL）分析。<b>分析过程完全不出网络。</b></span>
+    <span data-l="en">Change-impact analysis for Eclipse. Caller trees, entity / table deletion
+      surveys, cross-artifact analysis (JSP, mappers, SQL). <b>Nothing leaves the machine.</b></span>
+  </p>
+
+  <h2>
+    <span data-l="ja" class="on">更新サイト</span>
+    <span data-l="zh">更新站点</span>
+    <span data-l="en">Update site</span>
+  </h2>
+
+  <div class="url">
+    <code id="site">https://sunimori.tools/eclipse/impact-analyzer/</code>
+    <button id="copy" type="button">
+      <span data-l="ja" class="on">コピー</span>
+      <span data-l="zh">复制</span>
+      <span data-l="en">Copy</span>
+    </button>
+  </div>
+
+  <h2>
+    <span data-l="ja" class="on">インストール（初回のみ）</span>
+    <span data-l="zh">安装（仅首次）</span>
+    <span data-l="en">Install (first time only)</span>
+  </h2>
+
+  <div class="note">
+    <span data-l="ja" class="on"><b>先に dropins の jar を消してください。</b>
+      手で置いた <code class="inline">com.sunimori.tools.impactanalyzer_*.jar</code> が
+      <code class="inline">eclipse/dropins/</code> に残っていると二重になり、
+      どちらが動いているのか判らなくなります。</span>
+    <span data-l="zh"><b>先删掉 dropins 里的 jar。</b>
+      手工放进 <code class="inline">eclipse/dropins/</code> 的
+      <code class="inline">com.sunimori.tools.impactanalyzer_*.jar</code> 如果还在，
+      就会有两份，你无法确定哪份在跑。</span>
+    <span data-l="en"><b>Delete the dropins jar first.</b>
+      A hand-placed <code class="inline">com.sunimori.tools.impactanalyzer_*.jar</code> left in
+      <code class="inline">eclipse/dropins/</code> gives you two copies and no way to tell
+      which one is running.</span>
+  </div>
+
+  <ol>
+    <li data-l="ja" class="on">Eclipse を起動し、<b>Help → Install New Software…</b></li>
+    <li data-l="zh">启动 Eclipse，<b>Help → Install New Software…</b></li>
+    <li data-l="en">Start Eclipse, then <b>Help → Install New Software…</b></li>
+
+    <li data-l="ja" class="on"><b>Add…</b> を押し、Name に <code class="inline">Sunimori Tools</code>、
+      Location に上の URL を貼って <b>Add</b></li>
+    <li data-l="zh">点 <b>Add…</b>，Name 填 <code class="inline">Sunimori Tools</code>，
+      Location 粘贴上面的 URL，然后 <b>Add</b></li>
+    <li data-l="en">Press <b>Add…</b>, set Name to <code class="inline">Sunimori Tools</code>,
+      paste the URL above into Location, then <b>Add</b></li>
+
+    <li data-l="ja" class="on">一覧に出た <b>Java Impact Analyzer</b> にチェックを入れて
+      <b>Next</b> → ライセンスに同意 → <b>Finish</b></li>
+    <li data-l="zh">勾选列表里的 <b>Java Impact Analyzer</b>，
+      <b>Next</b> → 同意许可 → <b>Finish</b></li>
+    <li data-l="en">Tick <b>Java Impact Analyzer</b> in the list,
+      <b>Next</b> → accept the licence → <b>Finish</b></li>
+
+    <li data-l="ja" class="on">再起動を促されたら再起動</li>
+    <li data-l="zh">提示重启时重启</li>
+    <li data-l="en">Restart when prompted</li>
+  </ol>
+
+  <h2>
+    <span data-l="ja" class="on">更新</span>
+    <span data-l="zh">更新</span>
+    <span data-l="en">Updating</span>
+  </h2>
+
+  <p>
+    <span data-l="ja" class="on"><b>Help → Check for Updates</b>。
+      jar を差し替える必要はありません（ファイルが掴まれて消せない、も起きません）。</span>
+    <span data-l="zh"><b>Help → Check for Updates</b>。
+      不用再换 jar（也不会再遇到文件被占用删不掉的问题）。</span>
+    <span data-l="en"><b>Help → Check for Updates</b>. No jar swapping, and no more files
+      locked by a running Eclipse.</span>
+  </p>
+
+  <h2>
+    <span data-l="ja" class="on">動作条件</span>
+    <span data-l="zh">运行条件</span>
+    <span data-l="en">Requirements</span>
+  </h2>
+
+  <p>
+    <span data-l="ja" class="on">Eclipse 4.27（2023-03）以降 ／ JDK 17 以降。
+      対応言語は 英語・日本語・中国語（設定で切り替え）。</span>
+    <span data-l="zh">Eclipse 4.27（2023-03）及以上 ／ JDK 17 及以上。
+      支持英语、日语、中文（在设置里切换）。</span>
+    <span data-l="en">Eclipse 4.27 (2023-03) or later, JDK 17 or later.
+      English, Japanese and Chinese (switchable in the preferences).</span>
+  </p>
+
+  <h2>
+    <span data-l="ja" class="on">オフラインで入れる場合</span>
+    <span data-l="zh">离线安装</span>
+    <span data-l="en">Offline install</span>
+  </h2>
+
+  <p>
+    <span data-l="ja" class="on">サイトへ届かない端末には、
+      <a href="impact-analyzer.zip">更新サイトの zip</a> を渡してください。
+      Eclipse の <b>Add → Archive…</b> でそのまま読めます（解凍は不要）。</span>
+    <span data-l="zh">给连不到本站的机器，用
+      <a href="impact-analyzer.zip">更新站点 zip</a>。
+      在 Eclipse 里 <b>Add → Archive…</b> 直接选它即可（不用解压）。</span>
+    <span data-l="en">For a machine that cannot reach this site, hand over the
+      <a href="impact-analyzer.zip">update-site zip</a> and use
+      <b>Add → Archive…</b> in Eclipse. No need to unpack it.</span>
+  </p>
+
+  <footer>
+    <span data-l="ja" class="on">社内向け。外部への配布は想定していません。</span>
+    <span data-l="zh">内部使用。未考虑对外分发。</span>
+    <span data-l="en">Internal use. Not intended for outside distribution.</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('#lang button');
+  function pick(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-l]').forEach(function (el) {
+      el.classList.toggle('on', el.getAttribute('data-l') === lang);
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-set') === lang));
+    });
+    try { localStorage.setItem('ia.lang', lang); } catch (e) { /* 保存できなくても使える */ }
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { pick(b.getAttribute('data-set')); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem('ia.lang'); } catch (e) { /* 同上 */ }
+  if (!saved) {
+    var nav = (navigator.language || 'ja').toLowerCase();
+    saved = nav.indexOf('zh') === 0 ? 'zh' : nav.indexOf('en') === 0 ? 'en' : 'ja';
+  }
+  pick(saved);
+
+  var copy = document.getElementById('copy');
+  copy.addEventListener('click', function () {
+    var url = document.getElementById('site').textContent.trim();
+    var done = function () {
+      copy.classList.add('done');
+      setTimeout(function () { copy.classList.remove('done'); }, 1200);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(done, done);
+    } else {
+      // 古い環境向け。選択して手で コピー できる状態にするだけでも意味がある
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById('site'));
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      done();
+    }
+  });
+})();
+</script>
+</body>
+</html>
