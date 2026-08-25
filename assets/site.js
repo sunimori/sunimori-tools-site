@@ -259,4 +259,19 @@
   }
 
   document.getElementById("year").textContent = String(new Date().getFullYear());
+
+  // The version badge follows the update site, not this page. The string in the
+  // HTML is only a fallback -- hardcoding it here meant a release could (and did)
+  // leave a stale number on the page.
+  var versionBadge = document.getElementById("plugin-version");
+  if (versionBadge && window.fetch) {
+    fetch("eclipse/impact-analyzer/version.txt", { cache: "no-store" })
+      .then(function (response) { return response.ok ? response.text() : null; })
+      .then(function (text) {
+        if (!text) { return; }
+        var version = text.trim();
+        if (/^[0-9][0-9A-Za-z._-]*$/.test(version)) { versionBadge.textContent = version; }
+      })
+      .catch(function () { /* keep the fallback text */ });
+  }
 })();
