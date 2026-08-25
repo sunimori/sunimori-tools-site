@@ -1,606 +1,210 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Java Impact Analyzer</title>
-<style>
-  :root {
-    color-scheme: light dark;
-    --bg: #fbfbfd;  --glow: 60 118 190;
-    --card: #ffffff;  --sunk: #f2f4f8;  --raise: #ffffff;
-    --line: rgba(16, 24, 40, .10);  --line-2: rgba(16, 24, 40, .06);
-    --ink: #101319;  --ink-2: #4a525d;  --ink-3: #838b97;
-    --accent: #2b61a7;  --accent-2: #3f7fd0;  --wash: rgba(63, 127, 208, .10);
-    --ok: #157a49;  --warn: #8f5c0c;
-    --lift: 0 1px 2px rgba(16,24,40,.04), 0 14px 34px -22px rgba(16,24,40,.35);
-    --r: 18px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b0e12;  --glow: 122 176 236;
-      --card: #12161c;  --sunk: #0e1218;  --raise: #161b22;
-      --line: rgba(255, 255, 255, .09);  --line-2: rgba(255, 255, 255, .05);
-      --ink: #eaeef4;  --ink-2: #a3acb9;  --ink-3: #737d8a;
-      --accent: #7fb4ef;  --accent-2: #9dc9fa;  --wash: rgba(127, 180, 239, .12);
-      --ok: #5ec288;  --warn: #d8a544;
-      --lift: 0 1px 0 rgba(255,255,255,.03) inset;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
-          "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Noto Sans KR", "Microsoft YaHei", sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  body::before {
-    content: ""; position: fixed; inset: 0 0 auto 0; height: 620px; pointer-events: none; z-index: 0;
-    background:
-      radial-gradient(48% 58% at 50% -10%, rgb(var(--glow) / .17), transparent 66%),
-      radial-gradient(26% 36% at 12% 2%, rgb(var(--glow) / .07), transparent 70%),
-      radial-gradient(26% 36% at 88% 6%, rgb(var(--glow) / .06), transparent 70%);
-  }
-  .shell { position: relative; z-index: 1; }
-
-  /* 幅は固定しない。器は画面に合わせて伸び、読み物だけ別に上限を持つ */
-  .bound { width: min(1400px, 100%); margin: 0 auto; padding-inline: clamp(20px, 4vw, 52px); }
-
-  /* ── 帯 ── */
-  .bar {
-    position: sticky; top: 0; z-index: 40;
-    background: color-mix(in srgb, var(--bg) 78%, transparent);
-    backdrop-filter: saturate(1.8) blur(14px);
-    border-bottom: 1px solid transparent; transition: border-color .2s;
-  }
-  .bar.stuck { border-bottom-color: var(--line); }
-  .bar .bound { display: flex; align-items: center; gap: 11px; height: 64px; }
-  .mark {
-    width: 32px; height: 32px; flex: none; border-radius: 10px; color: #fff;
-    background: linear-gradient(148deg, var(--accent-2), var(--accent));
-    display: grid; place-items: center; box-shadow: 0 4px 12px -4px rgb(var(--glow) / .6);
-  }
-  .mark svg { width: 18px; height: 18px; }
-  .brand { font-weight: 600; letter-spacing: -.012em; }
-  .grow { flex: 1; }
-
-  /* ── 言語 ── */
-  .lang { position: relative; }
-  .lang-btn {
-    display: flex; align-items: center; gap: 6px; font: inherit; font-size: 13px;
-    color: var(--ink-2); cursor: pointer; background: transparent;
-    border: 1px solid var(--line); border-radius: 11px; padding: 7px 11px;
-    transition: border-color .16s, color .16s, background .16s;
-  }
-  .lang-btn:hover { color: var(--ink); background: var(--card); border-color: var(--ink-3); }
-  .lang-btn > svg:first-child { width: 16px; height: 16px; }
-  .lang-btn .chev { width: 12px; height: 12px; opacity: .55; transition: transform .18s; }
-  .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
-  .lang-menu {
-    position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; min-width: 188px; padding: 6px;
-    background: var(--raise); border: 1px solid var(--line); border-radius: 14px;
-    box-shadow: 0 14px 40px -12px rgba(6, 10, 16, .45); display: none;
-  }
-  .lang-menu.open { display: block; }
-  .lang-menu button {
-    display: flex; align-items: center; gap: 9px; width: 100%; font: inherit; font-size: 14px;
-    text-align: left; cursor: pointer; color: var(--ink-2); background: none; border: 0;
-    border-radius: 10px; padding: 8px 10px;
-  }
-  .lang-menu button:hover { background: var(--sunk); color: var(--ink); }
-  .lang-menu button[aria-checked="true"] { color: var(--accent); font-weight: 600; }
-  .lang-menu .tick { width: 14px; height: 14px; flex: none; opacity: 0; }
-  .lang-menu button[aria-checked="true"] .tick { opacity: 1; }
-  .lang-menu .sub { margin-left: auto; font-size: 11px; color: var(--ink-3); letter-spacing: .05em; }
-
-  /* ── 冒頭 ── */
-  .hero { text-align: center; padding: clamp(56px, 9vw, 104px) 0 clamp(30px, 4vw, 46px); }
-  h1 {
-    font-size: clamp(36px, 6vw, 60px); line-height: 1.04; letter-spacing: -.036em;
-    font-weight: 660; margin: 0 0 18px;
-    background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 68%, var(--bg)));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .lede {
-    font-size: clamp(15.5px, 1.5vw, 18px); line-height: 1.62; color: var(--ink-2);
-    margin: 0 auto; max-width: 60ch;
-  }
-
-  /* 主役: 更新サイトの URL。冒頭のすぐ下に、入力欄の顔で置く */
-  .cta { margin: clamp(26px, 3.4vw, 38px) auto 0; max-width: 720px; }
-  .field {
-    position: relative; display: flex; align-items: center;
-    background: var(--sunk); border: 1px solid var(--line);
-    border-radius: 13px; transition: border-color .16s;
-  }
-  .field:hover, .field:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
-  .field code {
-    flex: 1; min-width: 0; padding: 13px 52px 13px 16px; overflow-x: auto; text-align: left;
-    white-space: nowrap; color: var(--ink);
-    font: 13.5px/1.6 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
-  }
-  .field.wrap code { white-space: pre; }
-  .ghost {
-    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
-    width: 32px; height: 32px; flex: none; display: grid; place-items: center; cursor: pointer;
-    color: var(--ink-3); background: transparent; border: 1px solid transparent; border-radius: 9px;
-    transition: color .15s, background .15s, border-color .15s;
-  }
-  .ghost:hover { color: var(--ink); background: var(--card); border-color: var(--line); }
-  .ghost svg { width: 16px; height: 16px; }
-  .ghost .ic-done { display: none; }
-  .ghost.done { color: var(--ok); }
-  .ghost.done .ic-copy { display: none; }
-  .ghost.done .ic-done { display: block; }
-
-  .pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    font: 11.5px/1 ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
-    color: var(--ink-3); background: transparent; border: 1px solid var(--line);
-    border-radius: 999px; padding: 7px 12px;
-  }
-  .pill.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 32%, transparent); }
-  .pill svg { width: 13px; height: 13px; }
-
-  /* ── 格子: 列の数は画面が決める ── */
-  .grid { display: grid; gap: clamp(14px, 1.4vw, 20px); align-items: start; }
-  .grid + .grid { margin-top: clamp(14px, 1.4vw, 20px); }
-  .grid.wide { grid-template-columns: repeat(auto-fit, minmax(min(430px, 100%), 1fr)); }
-  .grid.slim { grid-template-columns: repeat(auto-fit, minmax(min(268px, 100%), 1fr)); }
-  .grid > * { min-width: 0; }
-
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
-    padding: clamp(20px, 2vw, 26px); box-shadow: var(--lift);
-    transition: border-color .18s, transform .18s;
-  }
-  .card:hover { border-color: color-mix(in srgb, var(--accent) 26%, var(--line)); }
-  .ch { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
-  .ci {
-    width: 30px; height: 30px; flex: none; border-radius: 9px; display: grid; place-items: center;
-    color: var(--accent); background: var(--wash);
-  }
-  .ci svg { width: 16px; height: 16px; }
-  h2 { font-size: 16.5px; letter-spacing: -.012em; font-weight: 620; margin: 0; }
-  p { margin: 0 0 11px; color: var(--ink-2); }
-  p:last-child { margin-bottom: 0; }
-  p strong, li strong { color: var(--ink); font-weight: 600; }
-  .muted { color: var(--ink-3); font-size: 13px; }
-  code.i {
-    background: var(--sunk); border: 1px solid var(--line-2); border-radius: 5px; padding: 1px 5px;
-    font: 12.5px ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
-    color: var(--ink); word-break: break-all;
-  }
-  .card .field { margin-top: 12px; }
-
-  /* ── 手順 ── */
-  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
-  ol.steps li { counter-increment: s; position: relative; padding: 0 0 16px 34px; color: var(--ink-2); }
-  ol.steps li::before {
-    content: counter(s); position: absolute; left: 0; top: 1px;
-    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
-    font-size: 11px; font-weight: 650; color: var(--accent); background: var(--wash);
-  }
-  ol.steps li::after {
-    content: ""; position: absolute; left: 10.5px; top: 26px; bottom: 3px; width: 1px;
-    background: var(--line);
-  }
-  ol.steps li:last-child { padding-bottom: 0; }
-  ol.steps li:last-child::after { display: none; }
-
-  /* ── 但し書き ── */
-  .note {
-    display: flex; gap: 10px; margin-top: 14px; padding: 12px 14px; font-size: 13.5px;
-    color: var(--ink-2); background: color-mix(in srgb, var(--warn) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--warn) 22%, transparent); border-radius: 12px;
-  }
-  .note svg { width: 15px; height: 15px; flex: none; margin-top: 4px; color: var(--warn); }
-
-  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 38%, transparent);
-      text-underline-offset: 2px; }
-  a:hover { text-decoration-color: currentColor; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
-  .tail { height: clamp(60px, 8vw, 120px); }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#090c10">
+  <meta name="description" content="Sunimori Tools — focused developer utilities for understanding complex systems.">
+  <title>Sunimori Tools</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<div class="shell">
+  <a class="skip-link" href="#main" data-i18n="skip">本文へ移動</a>
 
-  <div class="bar" id="bar">
-    <div class="bound">
-      <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 4v6a3 3 0 0 0 3 3h8"/><circle cx="5" cy="3" r="1.6"/>
-        <circle cx="19" cy="13" r="1.6"/><path d="M12 13v5a3 3 0 0 0 3 3h4"/></svg></span>
-      <span class="brand">Sunimori Tools</span>
-      <span class="grow"></span>
-      <div class="lang">
-        <button class="lang-btn" id="langBtn" aria-expanded="false" aria-haspopup="true"
-                aria-controls="langMenu" title="Language">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-               stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/>
-            <path d="M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18"/></svg>
-          <span id="langNow">日本語</span>
-          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn"></div>
+  <header class="site-header" id="siteHeader">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="#top" aria-label="Sunimori Tools">
+        <span class="brand-mark" aria-hidden="true"><img src="assets/mark.svg" alt=""></span>
+        <span>Sunimori <b>Tools</b></span>
+      </a>
+      <nav class="main-nav" aria-label="Primary">
+        <a href="#tools" data-i18n="navTools">ツール</a>
+        <a href="#principles" data-i18n="navPrinciples">考え方</a>
+        <a href="#install" data-i18n="navInstall">導入</a>
+      </nav>
+      <div class="header-actions">
+        <a class="source-link" href="https://github.com/sunimori/eclipse-java-impact-analyzer" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-github"></use></svg><span>GitHub</span>
+        </a>
+        <div class="language">
+          <button class="language-button" id="languageButton" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="languageMenu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-globe"></use></svg>
+            <span id="languageNow">日本語</span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-chevron"></use></svg>
+          </button>
+          <div class="language-menu" id="languageMenu" role="menu" aria-labelledby="languageButton"></div>
+        </div>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="bound">
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+      <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span></span><span data-i18n="heroEyebrow">Independent developer utilities</span></p>
+          <h1 data-i18n="heroTitle">複雑な仕事に、<br><em>静かな道具を。</em></h1>
+          <p class="hero-lede" data-i18n="heroBody">コードを理解し、変更の先を見通すための、小さく集中した開発ツール。余計な仕組みを持ち込まず、手元の仕事を明確にします。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#tools"><span data-i18n="exploreTools">ツールを見る</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+            <a class="button button-quiet" href="https://github.com/sunimori" target="_blank" rel="noreferrer"><span data-i18n="visitGithub">GitHub を見る</span></a>
+          </div>
+        </div>
 
-    <div class="hero">
-      <h1>Java Impact Analyzer</h1>
-      <p class="lede" data-i18n="lede"></p>
-      <div class="cta">
-      <div class="field">
-<code id="siteUrl">https://sunimori.tools/eclipse/impact-analyzer/</code>
-        <button class="ghost" type="button" data-copy="siteUrl" data-i18n-title="copy" aria-label="Copy">
-          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-        </button>
+        <div class="hero-object reveal" aria-label="A local dependency graph illustration">
+          <div class="object-topline">
+            <span class="object-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span data-i18n="localWorkspace">LOCAL WORKSPACE</span>
+            <span class="live-dot" data-i18n="ready">ready</span>
+          </div>
+          <div class="graph-stage" aria-hidden="true">
+            <svg viewBox="0 0 620 390" role="img">
+              <defs>
+                <linearGradient id="lineGlow" x1="0" x2="1"><stop offset="0" stop-color="#64a7f1" stop-opacity=".18"/><stop offset=".55" stop-color="#86c5ff" stop-opacity=".8"/><stop offset="1" stop-color="#8ee2c0" stop-opacity=".22"/></linearGradient>
+                <filter id="softGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <path class="graph-path graph-path-faint" d="M112 111 C196 111 188 198 285 198 S392 94 495 94"/>
+              <path class="graph-path graph-path-faint" d="M112 111 C198 111 180 292 280 292 S398 264 506 278"/>
+              <path class="graph-path graph-path-main" d="M112 111 C196 111 188 198 285 198 S392 94 495 94"/>
+              <path class="graph-path graph-path-main delay" d="M112 111 C198 111 180 292 280 292 S398 264 506 278"/>
+              <g class="graph-node node-source" transform="translate(52 80)"><rect width="120" height="62" rx="14"/><circle cx="23" cy="22" r="6"/><text x="38" y="26">OrderService</text><text class="node-sub" x="20" y="46">changed</text></g>
+              <g class="graph-node" transform="translate(240 167)"><rect width="130" height="62" rx="14"/><circle cx="23" cy="22" r="6"/><text x="38" y="26">OrderMapper</text><text class="node-sub" x="20" y="46">data access</text></g>
+              <g class="graph-node" transform="translate(442 63)"><rect width="126" height="62" rx="14"/><circle cx="23" cy="22" r="6"/><text x="38" y="26">orders</text><text class="node-sub" x="20" y="46">table</text></g>
+              <g class="graph-node" transform="translate(235 261)"><rect width="130" height="62" rx="14"/><circle cx="23" cy="22" r="6"/><text x="38" y="26">OrderView</text><text class="node-sub" x="20" y="46">screen</text></g>
+              <g class="graph-node" transform="translate(448 247)"><rect width="126" height="62" rx="14"/><circle cx="23" cy="22" r="6"/><text x="38" y="26">review.html</text><text class="node-sub" x="20" y="46">report</text></g>
+            </svg>
+          </div>
+          <div class="object-footer">
+            <span><i class="status-light blue"></i><span data-i18n="connections">4 connections traced</span></span>
+            <span><i class="status-light green"></i><span data-i18n="staysLocal">data stays local</span></span>
+          </div>
+        </div>
       </div>
+
+      <div class="wrap proof-strip reveal" aria-label="Sunimori Tools values">
+        <div><strong>01</strong><span data-i18n="proofTool">available tool</span></div>
+        <div><strong>07</strong><span data-i18n="proofLanguages">site languages</span></div>
+        <div><strong>0</strong><span data-i18n="proofNetwork">network required for core analysis</span></div>
+        <p data-i18n="proofNote">Built for deliberate, inspectable work.</p>
       </div>
-      <div class="pills">
-        <span class="pill" id="ver">1.0.0.202608241233</span>
-        <span class="pill ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span data-i18n="signed">signed</span></span>
-        <span class="pill" data-i18n="offlineBadge">offline</span>
+    </section>
+
+    <section class="section catalog" id="tools">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow"><span></span><span data-i18n="catalogEyebrow">The tool shelf</span></p><h2 data-i18n="catalogTitle">必要なものだけを、丁寧に。</h2></div>
+          <p data-i18n="catalogBody">Sunimori Tools は単一製品の名前ではありません。これから増える、用途の明確な開発ツールのための場所です。</p>
+        </div>
+
+        <article class="featured-tool reveal">
+          <div class="tool-copy">
+            <div class="tool-meta"><span class="product-index">ST—001</span><span class="availability"><i></i><span data-i18n="available">Available now</span></span></div>
+            <p class="tool-kicker">Eclipse / Java</p>
+            <h3>Java Impact Analyzer</h3>
+            <p class="tool-description" data-i18n="toolBody">変更したメソッドの先に何があるかを、呼び出し元、画面、mapper、SQL、entity、table まで横断して追跡します。調査結果は持ち運べる HTML / Markdown / XLSX レポートになります。</p>
+            <ul class="feature-list">
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="featureOne">変更影響と削除影響を一つの流れで調査</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="featureTwo">Java から画面・mapper・SQL・table まで横断</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="featureThree">コア分析はローカル完結、ネットワーク不要</span></li>
+            </ul>
+            <div class="tool-actions">
+              <a class="button button-light" href="#install"><span data-i18n="installNow">導入する</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+              <a class="text-link" href="https://github.com/sunimori/eclipse-java-impact-analyzer" target="_blank" rel="noreferrer"><span data-i18n="sourceCode">ソースコード</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-external"></use></svg></a>
+            </div>
+          </div>
+          <div class="tool-panel" aria-label="Java Impact Analyzer summary">
+            <div class="panel-heading"><span data-i18n="analysisPreview">ANALYSIS PREVIEW</span><span class="panel-chip" data-i18n="complete">complete</span></div>
+            <div class="impact-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="48"></circle><circle class="ring-value" cx="60" cy="60" r="48"></circle></svg><div><strong>27</strong><span data-i18n="affectedNodes">affected nodes</span></div></div>
+            <div class="impact-bars">
+              <div><span>Java</span><i><b style="--w:88%"></b></i><em>12</em></div><div><span>View</span><i><b style="--w:55%"></b></i><em>07</em></div><div><span>Mapper</span><i><b style="--w:38%"></b></i><em>05</em></div><div><span>SQL</span><i><b style="--w:24%"></b></i><em>03</em></div>
+            </div>
+            <div class="panel-summary"><span data-i18n="confidence">Trace confidence</span><strong>94%</strong></div>
+          </div>
+        </article>
+
+        <div class="future-shelf reveal">
+          <div class="future-intro"><span class="product-index">ST—NEXT</span><h3 data-i18n="futureTitle">次の道具のための余白。</h3><p data-i18n="futureBody">数を埋めるためには増やしません。開発の摩擦をはっきり減らせるテーマだけを、この棚に追加していきます。</p></div>
+          <div class="future-track" aria-hidden="true"><div><span>Developer workflow</span><i></i></div><div><span>Repository insight</span><i></i></div><div><span>Release utilities</span><i></i></div></div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="grid wide">
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg></span><h2 data-i18n="installTitle"></h2></div>
-        <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6"/><path d="M12 3 2 20h20z"/></svg><span data-i18n="dropins"></span></div>
-        <ol class="steps" style="margin-top:16px">
-          <li data-i18n="step1"></li>
-          <li data-i18n="step2"></li>
-          <li data-i18n="step3"></li>
-          <li data-i18n="step4"></li>
-        </ol>
+    <section class="section principles" id="principles">
+      <div class="wrap principles-grid">
+        <div class="principles-lead reveal"><p class="eyebrow"><span></span><span data-i18n="principlesEyebrow">How we build</span></p><h2 data-i18n="principlesTitle">目立つ機能より、<br>信頼できる振る舞い。</h2><p data-i18n="principlesBody">道具は、使う人の判断を置き換えるものではなく、判断できる材料を静かに整えるものだと考えています。</p></div>
+        <div class="principle-list">
+          <article class="principle reveal"><span>01</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-local"></use></svg><h3 data-i18n="principleOneTitle">Local first</h3><p data-i18n="principleOneBody">機密性の高いコードを、分析のためだけに外へ送らない。主要機能はネットワークなしで成立させます。</p></article>
+          <article class="principle reveal"><span>02</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-eye"></use></svg><h3 data-i18n="principleTwoTitle">Inspectable</h3><p data-i18n="principleTwoBody">結果だけでなく、どう到達したかを追えること。曖昧さや上限も隠さず、確認可能な形で示します。</p></article>
+          <article class="principle reveal"><span>03</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-focus"></use></svg><h3 data-i18n="principleThreeTitle">Focused</h3><p data-i18n="principleThreeBody">巨大な万能製品を目指さず、一つの厄介な仕事を最後まで扱える、輪郭のはっきりした道具を作ります。</p></article>
+        </div>
       </div>
+    </section>
 
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h2 data-i18n="trustTitle"></h2></div>
-        <p data-i18n="trustBody"></p>
-        <p class="muted" style="margin:14px 0 0">CN=Sunimori, OU=Tools, O=Sunimori, C=JP</p>
-      <div class="field wrap">
-<code id="fp">34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32
-40:4A:69:A4:B3:EF:90:66:6A:0B:DE:0B:49:BB:23:32</code>
-        <button class="ghost" type="button" data-copy="fp" data-i18n-title="copy" aria-label="Copy">
-          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-        </button>
+    <section class="section install" id="install">
+      <div class="wrap">
+        <div class="install-heading reveal">
+          <div><p class="eyebrow"><span></span><span data-i18n="installEyebrow">Get Java Impact Analyzer</span></p><h2 data-i18n="installTitle">Eclipse に導入する。</h2></div>
+          <div class="release-badges"><span>1.0.0.202608241233</span><span class="signed"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-shield"></use></svg><span data-i18n="signed">署名済み</span></span><span data-i18n="networkOptional">コア機能は通信不要</span></div>
+        </div>
+        <div class="install-console reveal">
+          <div class="console-label"><span data-i18n="updateSite">ECLIPSE UPDATE SITE</span><em data-i18n="copyHint">クリックしてコピー</em></div>
+          <div class="copy-field"><code id="updateUrl">https://sunimori.tools/eclipse/impact-analyzer/</code><button type="button" data-copy="updateUrl" data-i18n-title="copy" aria-label="Copy"><svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-copy"></use></svg><svg class="done-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="copy">コピー</span></button></div>
+        </div>
+        <div class="install-steps reveal">
+          <article><span>01</span><h3 data-i18n="stepOneTitle">古い配置を確認</h3><p data-i18n="stepOneBody"><code>eclipse/dropins/</code> に手動配置した同プラグインの jar があれば、先に削除します。</p></article>
+          <article><span>02</span><h3 data-i18n="stepTwoTitle">更新サイトを追加</h3><p data-i18n="stepTwoBody">Eclipse の <strong>Help → Install New Software…</strong> から、上の URL を追加します。</p></article>
+          <article><span>03</span><h3 data-i18n="stepThreeTitle">選択して導入</h3><p data-i18n="stepThreeBody"><strong>Java Impact Analyzer</strong> を選び、ライセンスと証明書を確認して完了します。</p></article>
+          <article><span>04</span><h3 data-i18n="stepFourTitle">再起動</h3><p data-i18n="stepFourBody">案内に従って Eclipse を再起動します。以降は <strong>Check for Updates</strong> で更新できます。</p></article>
+        </div>
+
+        <div class="trust-layout">
+          <article class="trust-card reveal">
+            <div class="card-label"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-shield"></use></svg><span data-i18n="trustLabel">RELEASE IDENTITY</span></div>
+            <h3 data-i18n="trustTitle">最初の一度だけ、署名者を確認。</h3>
+            <p data-i18n="trustBody">インストール中に証明書の信頼を求められます。署名者と指紋が一致することを確認してから信頼してください。</p>
+            <dl class="identity-list">
+              <div><dt data-i18n="signer">署名者</dt><dd>CN=Sunimori, OU=Tools, O=Sunimori, C=JP</dd></div>
+              <div><dt data-i18n="fingerprint">SHA-256 指紋</dt><dd class="fingerprint"><code id="fingerprint">34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32 40:4A:69:A4:B3:EF:90:66:6A:0B:DE:0B:49:BB:23:32</code><button type="button" data-copy="fingerprint" data-i18n-title="copy" aria-label="Copy"><svg class="copy-icon" viewBox="0 0 24 24"><use href="#icon-copy"></use></svg><svg class="done-icon" viewBox="0 0 24 24"><use href="#icon-check"></use></svg></button></dd></div>
+            </dl>
+            <p class="trust-warning"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-alert"></use></svg><span data-i18n="trustWarning">信頼後に証明書を再度求められた場合は、更新を中止してください。</span></p>
+          </article>
+          <div class="release-details reveal">
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-lock"></use></svg></span><div><h3 data-i18n="unsignedTitle">未署名を拒否</h3><p data-i18n="unsignedBody"><code>eclipse.ini</code> に追加すると、未署名コンテンツを警告ではなく失敗にできます。</p></div><button class="mini-copy" type="button" data-copy="unsignedPolicy" data-i18n-title="copy" aria-label="Copy"><svg class="copy-icon" viewBox="0 0 24 24"><use href="#icon-copy"></use></svg><svg class="done-icon" viewBox="0 0 24 24"><use href="#icon-check"></use></svg></button><code id="unsignedPolicy" class="hidden-source">-Declipse.p2.unsignedPolicy=fail</code></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-box"></use></svg></span><div><h3 data-i18n="offlineTitle">オフライン導入</h3><p data-i18n="offlineBody">ネットワークに接続できない端末では、更新サイトの zip を <strong>Add → Archive…</strong> から指定できます。</p><a href="impact-analyzer.zip" data-i18n="downloadZip">更新サイト zip を取得</a></div></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cpu"></use></svg></span><div><h3 data-i18n="requirementsTitle">動作条件</h3><p data-i18n="requirementsBody">Eclipse 4.27（2023-03）以降、JDK 17 以降。英語・日本語・中国語の UI に対応。</p></div></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-mail"></use></svg></span><div><h3 data-i18n="supportTitle">問い合わせ</h3><p data-i18n="supportBody">不具合や要望には、版番号とエラーログの該当行を添えてください。</p><a href="mailto:support@sunimori.tools">support@sunimori.tools</a></div></div>
+          </div>
+        </div>
       </div>
-        <p style="margin:13px 0 0;font-size:13.5px" data-i18n="fpChannel"></p>
-        <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6"/><path d="M12 3 2 20h20z"/></svg><span data-i18n="trustNote"></span></div>
-      </div>
-    </div>
+    </section>
 
-    <div class="grid wide">
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M8 10l3 2-3 2"/><path d="M13 14h4"/></svg></span><h2 data-i18n="hardenTitle"></h2></div>
-        <p data-i18n="hardenBody"></p>
-      <div class="field">
-<code id="ini">-Declipse.p2.unsignedPolicy=fail</code>
-        <button class="ghost" type="button" data-copy="ini" data-i18n-title="copy" aria-label="Copy">
-          <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-          <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-        </button>
-      </div>
-      </div>
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/></svg></span><h2 data-i18n="updateTitle"></h2></div>
-        <p data-i18n="updateBody"></p>
-      </div>
-    </div>
+    <section class="closing"><div class="wrap closing-inner reveal"><div><span class="brand-mark small" aria-hidden="true"><img src="assets/mark.svg" alt=""></span><p class="eyebrow"><span></span><span>Sunimori Tools</span></p><h2 data-i18n="closingTitle">一つずつ、長く使えるものを。</h2></div><p data-i18n="closingBody">新しい道具が加わっても、ここは静かで、見通しのよい場所であり続けます。</p></div></section>
+  </main>
 
-    <div class="grid slim">
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></span><h2 data-i18n="reqTitle"></h2></div>
-        <p data-i18n="reqBody"></p>
-      </div>
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v9a2 2 0 0 1-1.1 1.8l-7 3.4a2 2 0 0 1-1.8 0l-7-3.4A2 2 0 0 1 3 17V8"/><path d="M3.3 7.3 12 11l8.7-3.7L12 3z"/><path d="M12 11v11"/></svg></span><h2 data-i18n="offlineTitle"></h2></div>
-        <p data-i18n="offlineBody"></p>
-      </div>
-      <div class="card">
-      <div class="ch"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span><h2 data-i18n="supportTitle"></h2></div>
-        <p data-i18n="supportBody"></p>
-      </div>
-    </div>
+  <footer><div class="wrap footer-inner"><p>© <span id="year"></span> Sunimori</p><div><a href="https://github.com/sunimori" target="_blank" rel="noreferrer">GitHub</a><a href="mailto:support@sunimori.tools" data-i18n="contact">Contact</a></div></div></footer>
 
-    <div class="tail"></div>
-  </div>
-</div>
-
-<script>
-(function () {
-  "use strict";
-
-  var LANGS = [
-    { id: "ja", name: "日本語",   tag: "JA" },
-    { id: "zh", name: "中文",     tag: "ZH" },
-    { id: "en", name: "English",  tag: "EN" },
-    { id: "ko", name: "한국어",    tag: "KO" },
-    { id: "fr", name: "Français", tag: "FR" },
-    { id: "es", name: "Español",  tag: "ES" },
-    { id: "de", name: "Deutsch",  tag: "DE" }
-  ];
-
-  var T = {
-    ja: {
-      lede: "Eclipse 用の変更影響調査。呼び出し元の追跡、entity / table の削除調査、画面・mapper・SQL を横断した解析。<strong>解析は一切ネットワークへ出ない。</strong>",
-      signed: "署名済み", offlineBadge: "ネットワーク不要",
-      copy: "コピー",
-      installTitle: "インストール（初回のみ）",
-      dropins: "<strong>先に dropins の jar を消してください。</strong>手で置いた <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> が <code class=\"i\">eclipse/dropins/</code> に残っていると二重になり、どちらが動いているのか判らなくなります。",
-      step1: "Eclipse を起動し、<strong>Help → Install New Software…</strong>",
-      step2: "<strong>Add…</strong> を押し、Name に <code class=\"i\">Sunimori Tools</code>、Location に上の URL を貼って <strong>Add</strong>",
-      step3: "一覧の <strong>Java Impact Analyzer</strong> にチェック → <strong>Next</strong> → 同意 → <strong>Finish</strong>",
-      step4: "再起動を促されたら再起動",
-      trustTitle: "証明書を信頼する（初回に一度）",
-      trustBody: "途中で<strong>証明書を信頼するか</strong>訊かれます。下の指紋と合っていれば信頼してください。一度信頼すれば、以後の更新では<strong>二度と訊かれません</strong>。",
-      fpChannel: "この指紋は<strong>別の経路でも受け取ってください</strong>。",
-      trustNote: "<strong>信頼した後で証明書を訊かれたら、そこで止めてください。</strong>正しい更新なら二度と出ません。",
-      hardenTitle: "未署名の物を拒む（推奨）",
-      hardenBody: "<code class=\"i\">eclipse.ini</code> に次の 1 行を足すと、署名の無い物は警告ではなく<strong>失敗</strong>になります。",
-      updateTitle: "更新のしかた",
-      updateBody: "<strong>Help → Check for Updates</strong>。",
-      reqTitle: "動作条件", reqBody: "Eclipse 4.27（2023-03）以降 ／ JDK 17 以降。表示言語は英語・日本語・中国語。",
-      offlineTitle: "オフラインで入れる",
-      offlineBody: "サイトへ届かない端末には <a href=\"impact-analyzer.zip\">更新サイトの zip</a> を渡してください。<strong>Add → Archive…</strong> でそのまま読めます。",
-      supportTitle: "問い合わせ",
-      supportBody: "不具合や要望は <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a> へ。<strong>版番号と、エラーログの該当行</strong>を添えてください。"
-    },
-    zh: {
-      lede: "Eclipse 变更影响分析。调用链追踪、entity / table 删除调查、跨画面 / mapper / SQL 的制品分析。<strong>分析过程完全不出网络。</strong>",
-      signed: "已签名", offlineBadge: "无需联网",
-      copy: "复制",
-      installTitle: "安装（仅首次）",
-      dropins: "<strong>先删掉 dropins 里的 jar。</strong>手工放进 <code class=\"i\">eclipse/dropins/</code> 的 <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> 如果还在，就会有两份，你无法确定哪份在跑。",
-      step1: "启动 Eclipse，<strong>Help → Install New Software…</strong>",
-      step2: "点 <strong>Add…</strong>，Name 填 <code class=\"i\">Sunimori Tools</code>，Location 粘贴上面的 URL，然后 <strong>Add</strong>",
-      step3: "勾选列表里的 <strong>Java Impact Analyzer</strong> → <strong>Next</strong> → 同意许可 → <strong>Finish</strong>",
-      step4: "提示重启时重启",
-      trustTitle: "信任证书（首次一次）",
-      trustBody: "安装过程中会问你<strong>是否信任证书</strong>。与下面的指纹一致就信任它。信任一次之后，以后的更新<strong>不会再询问</strong>。",
-      fpChannel: "这个指纹<strong>请另外通过其他渠道再确认一次</strong>。",
-      trustNote: "<strong>信任之后如果又被问证书，请停下来。</strong>正常更新不会再出现这个框。",
-      hardenTitle: "拒绝未签名内容（推荐）",
-      hardenBody: "在 <code class=\"i\">eclipse.ini</code> 里加这一行，未签名的内容会<strong>直接安装失败</strong>而不是弹警告。",
-      updateTitle: "如何更新",
-      updateBody: "<strong>Help → Check for Updates</strong>。",
-      reqTitle: "运行条件", reqBody: "Eclipse 4.27（2023-03）及以上 ／ JDK 17 及以上。界面语言支持英语、日语、中文。",
-      offlineTitle: "离线安装",
-      offlineBody: "给连不到本站的机器，用 <a href=\"impact-analyzer.zip\">更新站点 zip</a>。在 Eclipse 里 <strong>Add → Archive…</strong> 直接选它即可。",
-      supportTitle: "联系与反馈",
-      supportBody: "故障和需求发到 <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a>。请附上<strong>版本号和错误日志里对应的几行</strong>。"
-    },
-    en: {
-      lede: "Change-impact analysis for Eclipse. Caller trees, entity / table deletion surveys, and analysis that crosses into screens, mappers and SQL. <strong>Nothing leaves the machine.</strong>",
-      signed: "signed", offlineBadge: "no network",
-      copy: "Copy",
-      installTitle: "Install (first time only)",
-      dropins: "<strong>Delete the dropins jar first.</strong> A hand-placed <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> left in <code class=\"i\">eclipse/dropins/</code> gives you two copies and no way to tell which one is running.",
-      step1: "Start Eclipse, then <strong>Help → Install New Software…</strong>",
-      step2: "Press <strong>Add…</strong>, set Name to <code class=\"i\">Sunimori Tools</code>, paste the URL above into Location, then <strong>Add</strong>",
-      step3: "Tick <strong>Java Impact Analyzer</strong> → <strong>Next</strong> → accept the licence → <strong>Finish</strong>",
-      step4: "Restart when prompted",
-      trustTitle: "Trusting the certificate (once)",
-      trustBody: "The install asks whether to <strong>trust the certificate</strong>. Trust it if the fingerprint matches the one below. Once trusted, updates <strong>never ask again</strong>.",
-      fpChannel: "Get this fingerprint <strong>through a second channel too</strong>.",
-      trustNote: "<strong>If a certificate prompt appears after that first time, stop.</strong> A legitimate update never asks again.",
-      hardenTitle: "Refuse unsigned content (recommended)",
-      hardenBody: "Add this line to <code class=\"i\">eclipse.ini</code> and unsigned content <strong>fails</strong> instead of warning.",
-      updateTitle: "How to update",
-      updateBody: "<strong>Help → Check for Updates</strong>.",
-      reqTitle: "Requirements", reqBody: "Eclipse 4.27 (2023-03) or later, JDK 17 or later. English, Japanese and Chinese.",
-      offlineTitle: "Offline install",
-      offlineBody: "For a machine that cannot reach this site, hand over the <a href=\"impact-analyzer.zip\">update-site zip</a> and use <strong>Add → Archive…</strong> in Eclipse.",
-      supportTitle: "Support",
-      supportBody: "Send problems and requests to <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a>. Include the <strong>version and the relevant lines from the error log</strong>."
-    },
-    ko: {
-      lede: "Eclipse 변경 영향 분석. 호출자 추적, entity / table 삭제 조사, 화면 · mapper · SQL 을 아우르는 산출물 분석. <strong>분석은 네트워크로 나가지 않습니다.</strong>",
-      signed: "서명됨", offlineBadge: "네트워크 불필요",
-      copy: "복사",
-      installTitle: "설치 (처음 한 번)",
-      dropins: "<strong>먼저 dropins 의 jar 를 지우세요.</strong> <code class=\"i\">eclipse/dropins/</code> 에 손으로 넣은 <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> 가 남아 있으면 두 개가 되어 어느 것이 동작하는지 알 수 없습니다.",
-      step1: "Eclipse 를 실행하고 <strong>Help → Install New Software…</strong>",
-      step2: "<strong>Add…</strong> 를 누르고 Name 에 <code class=\"i\">Sunimori Tools</code>, Location 에 위 URL 을 붙여 넣은 뒤 <strong>Add</strong>",
-      step3: "목록의 <strong>Java Impact Analyzer</strong> 를 선택 → <strong>Next</strong> → 라이선스 동의 → <strong>Finish</strong>",
-      step4: "재시작하라고 나오면 재시작",
-      trustTitle: "인증서 신뢰 (처음 한 번)",
-      trustBody: "설치 중에 <strong>인증서를 신뢰할지</strong> 묻습니다. 아래 지문과 일치하면 신뢰하세요. 한 번 신뢰하면 이후 업데이트에서는 <strong>다시 묻지 않습니다</strong>.",
-      fpChannel: "이 지문은 <strong>다른 경로로도 확인하세요</strong>.",
-      trustNote: "<strong>한 번 신뢰한 뒤에 인증서 창이 다시 나오면 멈추세요.</strong> 정상적인 업데이트는 다시 묻지 않습니다.",
-      hardenTitle: "서명 없는 항목 거부 (권장)",
-      hardenBody: "<code class=\"i\">eclipse.ini</code> 에 이 줄을 추가하면 서명 없는 항목은 경고가 아니라 <strong>설치 실패</strong>가 됩니다.",
-      updateTitle: "업데이트 방법",
-      updateBody: "<strong>Help → Check for Updates</strong>.",
-      reqTitle: "요구 사항", reqBody: "Eclipse 4.27 (2023-03) 이상, JDK 17 이상. 화면 언어는 영어 · 일본어 · 중국어.",
-      offlineTitle: "오프라인 설치",
-      offlineBody: "이 사이트에 접속할 수 없는 기기에는 <a href=\"impact-analyzer.zip\">업데이트 사이트 zip</a> 을 전달하고 Eclipse 에서 <strong>Add → Archive…</strong> 로 지정하세요.",
-      supportTitle: "문의",
-      supportBody: "문제나 요청은 <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a> 로 보내 주세요. <strong>버전과 오류 로그의 해당 줄</strong>을 함께 보내 주십시오."
-    },
-    fr: {
-      lede: "Analyse d'impact des modifications pour Eclipse. Arbres d'appelants, étude de suppression d'entity / table, analyse qui traverse écrans, mappers et SQL. <strong>Rien ne quitte la machine.</strong>",
-      signed: "signé", offlineBadge: "sans réseau",
-      copy: "Copier",
-      installTitle: "Installation (la première fois seulement)",
-      dropins: "<strong>Supprimez d'abord le jar de dropins.</strong> Un <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> laissé à la main dans <code class=\"i\">eclipse/dropins/</code> vous donne deux copies, sans moyen de savoir laquelle tourne.",
-      step1: "Lancez Eclipse, puis <strong>Help → Install New Software…</strong>",
-      step2: "Cliquez <strong>Add…</strong>, mettez <code class=\"i\">Sunimori Tools</code> dans Name, collez l'URL ci-dessus dans Location, puis <strong>Add</strong>",
-      step3: "Cochez <strong>Java Impact Analyzer</strong> → <strong>Next</strong> → acceptez la licence → <strong>Finish</strong>",
-      step4: "Redémarrez lorsque cela vous est proposé",
-      trustTitle: "Faire confiance au certificat (une fois)",
-      trustBody: "L'installation demande si vous <strong>faites confiance au certificat</strong>. Acceptez si l'empreinte correspond à celle ci-dessous. Une fois accepté, les mises à jour <strong>ne demandent plus rien</strong>.",
-      fpChannel: "Obtenez cette empreinte <strong>par un second canal</strong>.",
-      trustNote: "<strong>Si une demande de certificat réapparaît après cette première fois, arrêtez-vous.</strong> Une mise à jour légitime ne redemande jamais.",
-      hardenTitle: "Refuser le contenu non signé (recommandé)",
-      hardenBody: "Ajoutez cette ligne à <code class=\"i\">eclipse.ini</code> : le contenu non signé <strong>échoue</strong> au lieu d'avertir.",
-      updateTitle: "Comment mettre à jour",
-      updateBody: "<strong>Help → Check for Updates</strong>.",
-      reqTitle: "Prérequis", reqBody: "Eclipse 4.27 (2023-03) ou plus récent, JDK 17 ou plus récent. Anglais, japonais et chinois.",
-      offlineTitle: "Installation hors ligne",
-      offlineBody: "Pour une machine qui n'atteint pas ce site, transmettez le <a href=\"impact-analyzer.zip\">zip du site de mise à jour</a> et utilisez <strong>Add → Archive…</strong> dans Eclipse.",
-      supportTitle: "Assistance",
-      supportBody: "Envoyez problèmes et demandes à <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a>. Joignez la <strong>version et les lignes concernées du journal d erreurs</strong>."
-    },
-    es: {
-      lede: "Análisis de impacto de cambios para Eclipse. Árboles de llamadores, estudio de borrado de entity / table y análisis que cruza pantallas, mappers y SQL. <strong>Nada sale de la máquina.</strong>",
-      signed: "firmado", offlineBadge: "sin red",
-      copy: "Copiar",
-      installTitle: "Instalación (solo la primera vez)",
-      dropins: "<strong>Borre primero el jar de dropins.</strong> Un <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> puesto a mano en <code class=\"i\">eclipse/dropins/</code> deja dos copias y no hay forma de saber cuál se está ejecutando.",
-      step1: "Abra Eclipse y vaya a <strong>Help → Install New Software…</strong>",
-      step2: "Pulse <strong>Add…</strong>, escriba <code class=\"i\">Sunimori Tools</code> en Name, pegue la URL de arriba en Location y pulse <strong>Add</strong>",
-      step3: "Marque <strong>Java Impact Analyzer</strong> → <strong>Next</strong> → acepte la licencia → <strong>Finish</strong>",
-      step4: "Reinicie cuando se lo pida",
-      trustTitle: "Confiar en el certificado (una vez)",
-      trustBody: "La instalación pregunta si <strong>confía en el certificado</strong>. Acéptelo si la huella coincide con la de abajo. Una vez aceptado, las actualizaciones <strong>no vuelven a preguntar</strong>.",
-      fpChannel: "Consiga esta huella <strong>también por otro canal</strong>.",
-      trustNote: "<strong>Si vuelve a aparecer una petición de certificado después de esa primera vez, deténgase.</strong> Una actualización legítima no pregunta de nuevo.",
-      hardenTitle: "Rechazar contenido sin firma (recomendado)",
-      hardenBody: "Añada esta línea a <code class=\"i\">eclipse.ini</code> y el contenido sin firmar <strong>falla</strong> en lugar de avisar.",
-      updateTitle: "Cómo actualizar",
-      updateBody: "<strong>Help → Check for Updates</strong>.",
-      reqTitle: "Requisitos", reqBody: "Eclipse 4.27 (2023-03) o posterior, JDK 17 o posterior. Inglés, japonés y chino.",
-      offlineTitle: "Instalación sin conexión",
-      offlineBody: "Para una máquina que no llega a este sitio, entregue el <a href=\"impact-analyzer.zip\">zip del sitio de actualización</a> y use <strong>Add → Archive…</strong> en Eclipse.",
-      supportTitle: "Soporte",
-      supportBody: "Envíe problemas y peticiones a <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a>. Adjunte la <strong>versión y las líneas correspondientes del registro de errores</strong>."
-    },
-    de: {
-      lede: "Änderungs-Impact-Analyse für Eclipse. Aufruferbäume, Untersuchung von entity- / table-Löschungen, Analyse über Masken, Mapper und SQL hinweg. <strong>Nichts verlässt den Rechner.</strong>",
-      signed: "signiert", offlineBadge: "ohne Netz",
-      copy: "Kopieren",
-      installTitle: "Installation (nur beim ersten Mal)",
-      dropins: "<strong>Löschen Sie zuerst das jar in dropins.</strong> Ein von Hand in <code class=\"i\">eclipse/dropins/</code> gelegtes <code class=\"i\">com.sunimori.tools.impactanalyzer_*.jar</code> ergibt zwei Kopien, und man kann nicht sagen, welche läuft.",
-      step1: "Eclipse starten, dann <strong>Help → Install New Software…</strong>",
-      step2: "<strong>Add…</strong> drücken, bei Name <code class=\"i\">Sunimori Tools</code> eintragen, die URL von oben in Location einfügen, dann <strong>Add</strong>",
-      step3: "<strong>Java Impact Analyzer</strong> anhaken → <strong>Next</strong> → Lizenz annehmen → <strong>Finish</strong>",
-      step4: "Neu starten, wenn danach gefragt wird",
-      trustTitle: "Dem Zertifikat vertrauen (einmalig)",
-      trustBody: "Die Installation fragt, ob Sie dem <strong>Zertifikat vertrauen</strong>. Vertrauen Sie ihm, wenn der Fingerprint mit dem unten übereinstimmt. Danach fragen Updates <strong>nie wieder</strong>.",
-      fpChannel: "Holen Sie sich diesen Fingerprint <strong>auch über einen zweiten Kanal</strong>.",
-      trustNote: "<strong>Erscheint nach diesem ersten Mal wieder eine Zertifikatsabfrage, brechen Sie ab.</strong> Ein legitimes Update fragt nicht erneut.",
-      hardenTitle: "Unsignierte Inhalte ablehnen (empfohlen)",
-      hardenBody: "Diese Zeile in <code class=\"i\">eclipse.ini</code> lässt unsignierte Inhalte <strong>fehlschlagen</strong> statt nur zu warnen.",
-      updateTitle: "So wird aktualisiert",
-      updateBody: "<strong>Help → Check for Updates</strong>.",
-      reqTitle: "Voraussetzungen", reqBody: "Eclipse 4.27 (2023-03) oder neuer, JDK 17 oder neuer. Englisch, Japanisch und Chinesisch.",
-      offlineTitle: "Offline installieren",
-      offlineBody: "Für einen Rechner ohne Zugang zu dieser Seite das <a href=\"impact-analyzer.zip\">Zip der Update-Site</a> weitergeben und in Eclipse <strong>Add → Archive…</strong> benutzen.",
-      supportTitle: "Kontakt",
-      supportBody: "Probleme und Wünsche an <a href='mailto:support@sunimori.tools'>support@sunimori.tools</a>. Bitte die <strong>Version und die betreffenden Zeilen aus dem Fehlerprotokoll</strong> mitschicken."
-    }
-  };
-
-  var TICK = '<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-           + ' stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'
-           + '<path d="M5 13l4 4L19 7"/></svg>';
-
-  var btn = document.getElementById("langBtn");
-  var menu = document.getElementById("langMenu");
-  var now = document.getElementById("langNow");
-  var current = "ja";
-
-  LANGS.forEach(function (l) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.setAttribute("role", "menuitemradio");
-    b.dataset.lang = l.id;
-    b.innerHTML = TICK + '<span>' + l.name + '</span><span class="sub">' + l.tag + '</span>';
-    b.addEventListener("click", function () { pick(l.id); close(); btn.focus(); });
-    menu.appendChild(b);
-  });
-
-  function apply(lang) {
-    var t = T[lang] || T.en;
-    document.documentElement.lang = lang;
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var v = t[el.getAttribute("data-i18n")];
-      if (v != null) { el.innerHTML = v; }
-    });
-    // 絵だけの釦は、題名で何をする物か伝える
-    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
-      var v = t[el.getAttribute("data-i18n-title")];
-      if (v != null) { el.title = v; el.setAttribute("aria-label", v); }
-    });
-    var meta = LANGS.filter(function (l) { return l.id === lang; })[0];
-    now.textContent = meta ? meta.name : lang;
-    menu.querySelectorAll("button").forEach(function (b) {
-      b.setAttribute("aria-checked", String(b.dataset.lang === lang));
-    });
-  }
-
-  function pick(lang) {
-    current = lang;
-    apply(lang);
-    try { localStorage.setItem("st.lang", lang); } catch (e) { /* 保存できなくても使える */ }
-  }
-
-  function open() { menu.classList.add("open"); btn.setAttribute("aria-expanded", "true"); }
-  function close() { menu.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); }
-
-  btn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    if (menu.classList.contains("open")) { close(); } else { open(); }
-  });
-  document.addEventListener("click", function (e) {
-    if (!menu.contains(e.target) && !btn.contains(e.target)) { close(); }
-  });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { close(); } });
-
-  // 起動時の言語: 前回の選択 → 閲覧環境の設定 → 日本語
-  var saved = null;
-  try { saved = localStorage.getItem("st.lang"); } catch (e) { /* 同上 */ }
-  if (!saved) {
-    var nav = (navigator.languages || [navigator.language || "ja"]).join(",").toLowerCase();
-    var hit = LANGS.filter(function (l) { return nav.indexOf(l.id) >= 0; })[0];
-    saved = hit ? hit.id : "ja";
-  }
-  pick(saved);
-
-  // 帯は、少しでも巻いたら下辺の線を出す。常に出しておくと、
-  // 一番上に居る時に画面を無意味に二分してしまう
-  var bar = document.getElementById("bar");
-  var onScroll = function () { bar.classList.toggle("stuck", window.scrollY > 4); };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-
-  // ---- 写す釦 ----
-  document.querySelectorAll("[data-copy]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var src = document.getElementById(b.getAttribute("data-copy"));
-      var text = src.textContent.replace(/\s*\n\s*/g, " ").trim();
-      var done = function () {
-        b.classList.add("done");
-        setTimeout(function () { b.classList.remove("done"); }, 1400);
-      };
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(done, done);
-      } else {
-        // 古い環境。選んだ状態にして手で写せるようにするだけでも意味がある
-        var r = document.createRange();
-        r.selectNodeContents(src);
-        var s = window.getSelection();
-        s.removeAllRanges();
-        s.addRange(r);
-        done();
-      }
-    });
-  });
-})();
-</script>
+  <svg class="symbol-sprite" aria-hidden="true">
+    <symbol id="icon-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7.4A5.8 5.8 0 0 0 19.3 3 5.4 5.4 0 0 0 19.1 0S17.9-.4 15 1.5a14 14 0 0 0-6 0C6.1-.4 4.9 0 4.9 0a5.4 5.4 0 0 0-.2 3A5.8 5.8 0 0 0 3.2 7.1c0 5.8 3.5 7 6.8 7.4A4.8 4.8 0 0 0 9 18v4m0-3c-5 .9-5-2.4-7-3"/></symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5m0-5-8 8M19 14v5H5V5h5"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></symbol>
+    <symbol id="icon-local" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5M8 17h3"/></symbol>
+    <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="icon-focus" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5m0 8v5h-5M8 21H3v-5"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 3 7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6l7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H3V3h12v2"/></symbol>
+    <symbol id="icon-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3h.01"/></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="icon-box" viewBox="0 0 24 24"><path d="m3 7 9 4 9-4-9-4-9 4Z"/><path d="m3 7 9 4v10l-9-4V7Zm18 0-9 4v10l9-4V7Z"/></symbol>
+    <symbol id="icon-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v5m6-5v5M9 18v5m6-5v5M1 9h5m-5 6h5m12-6h5m-5 6h5"/></symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+  </svg>
+  <script src="assets/site.js"></script>
 </body>
 </html>
