@@ -82,7 +82,7 @@
       </div>
 
       <div class="wrap proof-strip reveal" aria-label="Sunimori Tools values">
-        <div><strong>01</strong><span data-i18n="proofTool">available tool</span></div>
+        <div><strong>02</strong><span data-i18n="proofTool">available tools</span></div>
         <div><strong>07</strong><span data-i18n="proofLanguages">site languages</span></div>
         <div><strong>0</strong><span data-i18n="proofNetwork">network required for core analysis</span></div>
         <p data-i18n="proofNote">Built for deliberate, inspectable work.</p>
@@ -118,6 +118,32 @@
               <div><span>Java</span><i><b style="--w:88%"></b></i><em>12</em></div><div><span>View</span><i><b style="--w:55%"></b></i><em>07</em></div><div><span>Mapper</span><i><b style="--w:38%"></b></i><em>05</em></div><div><span>SQL</span><i><b style="--w:24%"></b></i><em>03</em></div>
             </div>
             <div class="panel-summary"><span data-i18n="confidence">Trace confidence</span><strong>94%</strong></div>
+          </div>
+        </article>
+
+        <article class="featured-tool tool-reviewer reveal">
+          <div class="tool-copy">
+            <div class="tool-meta"><span class="product-index">ST—002</span><span class="availability preview"><i></i><span data-i18n="srAvailable">プレビュー版</span></span></div>
+            <p class="tool-kicker">Eclipse · IntelliJ IDEA · VS Code / Java · JSF</p>
+            <h3>SmartReviewer</h3>
+            <p class="tool-description" data-i18n="srBody">Java・JSF チームのための、根拠を示すコードレビュー。コピー＆ペーストの写し間違い、誤った比較、存在しない Bean のメンバーを指す EL などを、保存時・SVN のローカル変更・プロジェクト全体で見つけ、指摘ごとに根拠を示します。</p>
+            <ul class="feature-list">
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureOne">Java・SQL パラメータ・XHTML/EL の組み込み規則 20 件</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureTwo">保存時、SVN のローカル変更、プロジェクト全体をレビュー</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureThree">エンジンは手元で動き、コードを外へ送らない</span></li>
+            </ul>
+            <div class="tool-actions">
+              <a class="button button-light" href="#install-smartreviewer"><span data-i18n="installNow">導入する</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-arrow"></use></svg></a>
+            </div>
+          </div>
+          <div class="tool-panel" aria-label="SmartReviewer sample findings">
+            <div class="panel-heading"><span data-i18n="srPanelTitle">指摘の例</span><span class="panel-chip" data-i18n="srPanelChip">保存時</span></div>
+            <ol class="finding-list">
+              <li><span class="finding-severity warning">WARNING</span><code>TotalCalc.java:57</code><em>SR-JAVA-ARRAY-001</em><p data-i18n="srFindOne">7 番目と 8 番目で value7 を重複して読んでいる</p></li>
+              <li><span class="finding-severity warning">WARNING</span><code>OrderService.java:118</code><em>SR-JAVA-BOXED-EQ-001</em><p data-i18n="srFindTwo">Integer オブジェクトを == で比較している</p></li>
+              <li><span class="finding-severity info">INFO</span><code>order.xhtml:42</code><em>SR-XHTML-EL-001</em><p data-i18n="srFindThree">orderForm に totl というプロパティはない</p></li>
+            </ol>
+            <div class="panel-summary"><span data-i18n="srRules">組み込み規則</span><strong>20</strong></div>
           </div>
         </article>
 
@@ -177,6 +203,44 @@
       </div>
     </section>
 
+    <section class="section install" id="install-smartreviewer">
+      <div class="wrap">
+        <div class="install-heading reveal">
+          <div><p class="eyebrow"><span></span><span data-i18n="srInstallEyebrow">Get SmartReviewer</span></p><h2 data-i18n="srInstallTitle">IDE に導入する。</h2></div>
+          <div class="release-badges"><span id="sr-version">0.1.0</span><span class="preview" data-i18n="srPreviewBadge">プレビュー版</span><span class="signed"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-shield"></use></svg><span data-i18n="srSigned">Eclipse 版は署名済み</span></span><span data-i18n="srLocalBadge">コードは手元から出ない</span></div>
+        </div>
+        <div class="install-console reveal">
+          <div class="console-label"><span data-i18n="updateSite">ECLIPSE UPDATE SITE</span><em data-i18n="copyHint">クリックしてコピー</em></div>
+          <div class="copy-field"><code id="srUpdateUrl">https://sunimori.tools/eclipse/smartreviewer/</code><button type="button" data-copy="srUpdateUrl" data-i18n-title="copy" aria-label="Copy"><svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-copy"></use></svg><svg class="done-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="copy">コピー</span></button></div>
+        </div>
+        <div class="install-steps reveal">
+          <article><span>01</span><h3 data-i18n="srStepJavaTitle">Java 17 を用意</h3><p data-i18n="srStepJavaBody">レビューエンジンは Java 17 以降の別プロセスで動きます。IntelliJ IDEA は同梱の実行環境をそのまま使えます。Eclipse と VS Code は設定した JDK か <code>JAVA_HOME</code> を使います。</p></article>
+          <article><span>02</span><h3>Eclipse</h3><p data-i18n="srStepEclipseBody"><strong>Help → Install New Software…</strong> で上の URL を追加し、<strong>SmartReviewer</strong> を選んで導入し、再起動します。</p></article>
+          <article><span>03</span><h3>IntelliJ IDEA</h3><p data-i18n="srStepIdeaBody">zip を取得し、展開せずに <strong>Settings → Plugins → ⚙ → Install Plugin from Disk…</strong> で選びます。</p><a class="step-link" href="smartreviewer/smartreviewer-intellij.zip"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-download"></use></svg><span data-i18n="srDownloadIdea">IDEA 用 zip を取得</span></a></article>
+          <article><span>04</span><h3>VS Code</h3><p data-i18n="srStepVscodeBody">vsix を取得し、拡張機能ビューの <strong>… → Install from VSIX…</strong> で選びます。</p><a class="step-link" href="smartreviewer/smartreviewer-vscode.vsix"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-download"></use></svg><span data-i18n="srDownloadVscode">VS Code 用 vsix を取得</span></a></article>
+        </div>
+
+        <div class="trust-layout">
+          <article class="trust-card reveal">
+            <div class="card-label"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-shield"></use></svg><span data-i18n="trustLabel">RELEASE IDENTITY</span></div>
+            <h3 data-i18n="srTrustTitle">Eclipse 版は同じ署名者。</h3>
+            <p data-i18n="srTrustBody">Eclipse の jar は Java Impact Analyzer と同じ証明書で署名しています。IntelliJ IDEA・VS Code・コマンドライン版には署名がないため、公開している SHA-256 と照合してください。</p>
+            <dl class="identity-list">
+              <div><dt data-i18n="signer">署名者</dt><dd>CN=Sunimori, OU=Tools, O=Sunimori, C=JP</dd></div>
+              <div><dt data-i18n="fingerprint">SHA-256 指紋</dt><dd class="fingerprint"><code id="srFingerprint">34:20:B1:D6:73:C4:00:7B:E2:72:7F:D3:C8:3B:61:32 40:4A:69:A4:B3:EF:90:66:6A:0B:DE:0B:49:BB:23:32</code><button type="button" data-copy="srFingerprint" data-i18n-title="copy" aria-label="Copy"><svg class="copy-icon" viewBox="0 0 24 24"><use href="#icon-copy"></use></svg><svg class="done-icon" viewBox="0 0 24 24"><use href="#icon-check"></use></svg></button></dd></div>
+              <div><dt data-i18n="srChecksums">チェックサム</dt><dd><a href="smartreviewer/SHA256SUMS">SHA256SUMS</a></dd></div>
+            </dl>
+          </article>
+          <div class="release-details reveal">
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-terminal"></use></svg></span><div><h3 data-i18n="srCliTitle">コマンドライン</h3><p data-i18n="srCliBody">展開して <code>bin/smartreviewer review -p &lt;プロジェクト&gt;</code> を実行します。テキスト・JSON・SARIF で出力でき、CI でも使えます。</p><a href="smartreviewer/smartreviewer-cli.zip" data-i18n="srDownloadCli">CLI の zip を取得</a></div></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-box"></use></svg></span><div><h3 data-i18n="offlineTitle">オフライン導入</h3><p data-i18n="srOfflineBody">Eclipse では、更新サイトの zip を <strong>Add → Archive…</strong> から指定できます。</p><a href="smartreviewer/smartreviewer-eclipse.zip" data-i18n="downloadZip">更新サイト zip を取得</a></div></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cpu"></use></svg></span><div><h3 data-i18n="requirementsTitle">動作条件</h3><p data-i18n="srRequirementsBody">Eclipse 2020-09（4.17）以降、IntelliJ IDEA 2024.1 以降（Community / Ultimate）、VS Code 1.85 以降。エンジンは Java 17 以降。SVN の変更のレビューには <code>svn</code> コマンドが必要です。UI とメッセージは日本語・中国語・英語。</p></div></div>
+            <div class="release-row"><span class="row-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-mail"></use></svg></span><div><h3 data-i18n="srFeedbackTitle">プレビュー版へのご意見</h3><p data-i18n="srFeedbackBody">誤検知や見逃しは、規則 ID と版番号、誤検知か見逃しかを添えてお知らせください。</p><a href="mailto:support@sunimori.tools">support@sunimori.tools</a></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="closing"><div class="wrap closing-inner reveal"><div><span class="brand-mark small" aria-hidden="true"><img src="assets/mark.svg" alt=""></span><p class="eyebrow"><span></span><span>Sunimori Tools</span></p><h2 data-i18n="closingTitle">一つずつ、長く使えるものを。</h2></div><p data-i18n="closingBody">新しい道具が加わっても、ここは静かで、見通しのよい場所であり続けます。</p></div></section>
   </main>
 
@@ -199,6 +263,8 @@
     <symbol id="icon-box" viewBox="0 0 24 24"><path d="m3 7 9 4 9-4-9-4-9 4Z"/><path d="m3 7 9 4v10l-9-4V7Zm18 0-9 4v10l9-4V7Z"/></symbol>
     <symbol id="icon-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v5m6-5v5M9 18v5m6-5v5M1 9h5m-5 6h5m12-6h5m-5 6h5"/></symbol>
     <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+    <symbol id="icon-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></symbol>
   </svg>
   <script src="assets/site.js"></script>
 </body>
