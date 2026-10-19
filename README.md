@@ -28,8 +28,10 @@ their SHA-256 checksums in `smartreviewer/SHA256SUMS`.
 | `eclipse/smartreviewer/`, `smartreviewer/` | SmartReviewer release |
 
 Each tool's release replaces only its own paths, so one tool's release never
-removes another tool or the page. The page reads each tool's version from
-`eclipse/impact-analyzer/version.txt` and `smartreviewer/version.txt`.
+removes another tool or the page. The page reads each tool's version from its
+Eclipse update site, `eclipse/impact-analyzer/version.txt` and
+`eclipse/smartreviewer/version.txt`: the plug-in version with its build time
+(such as `0.1.3.202610190716`), as Eclipse shows it.
 
 ## Publishing a new build
 

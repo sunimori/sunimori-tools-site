@@ -416,5 +416,5 @@
       .catch(function () { /* keep the fallback text */ });
   }
   showVersion("eclipse/impact-analyzer/version.txt", "plugin-version");
-  showVersion("smartreviewer/version.txt", "sr-version");
+  showVersion("eclipse/smartreviewer/version.txt", "sr-version");
 })();
