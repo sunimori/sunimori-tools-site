@@ -33,7 +33,8 @@ Eclipse update site, `eclipse/impact-analyzer/version.txt` and
 `eclipse/smartreviewer/version.txt`: the plug-in version with its build time
 (such as `0.1.3.202610190716`), as Eclipse shows it. The SmartReviewer badge also
 shows the version of the built-in rule package, read from `smartreviewer/rule-package.txt`
-(such as `0.19.0`).
+(such as `0.19.0`), and the SmartReviewer card shows the number of built-in rules, read from
+`smartreviewer/rule-count.txt` (such as `140`). Both files are written by the SmartReviewer release.
 
 ## Publishing a new build
 

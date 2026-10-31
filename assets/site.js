@@ -49,7 +49,7 @@
     closingTitle: "One lasting tool at a time.", closingBody: "As new tools arrive, this will remain a quiet and legible place to find them.", contact: "Contact",
     srAvailable: "Preview",
     srBody: "Explainable code review for Java and JSF teams. It finds copy-and-paste slips, misleading comparisons and EL that points at bean members which do not exist—on save, in your SVN local changes or across a whole project—and shows the evidence behind every finding.",
-    srFeatureOne: "20 built-in rules for Java, SQL parameters and XHTML/EL", srFeatureTwo: "Review on save, SVN local changes or the whole project",
+    srFeatureOne: "<span class='rule-count' data-rule-count-scope hidden><span data-rule-count></span> </span>built-in rules for Java, SQL parameters and XHTML/EL", srFeatureTwo: "Review on save, SVN local changes or the whole project",
     srFeatureThree: "The engine runs on your machine; code never leaves it", srPanelTitle: "SAMPLE FINDINGS", srPanelChip: "on save",
     srFindOne: "value7 is read for both item 7 and item 8", srFindTwo: "Integer objects compared with ==", srFindThree: "orderForm has no property totl",
     srRules: "Built-in rules", srInstallEyebrow: "Get SmartReviewer", srInstallTitle: "Install it in your IDE.", srPreviewBadge: "preview", srRulePackage: "Built-in rule package",
@@ -99,7 +99,7 @@
     closingTitle: "一つずつ、長く使えるものを。", closingBody: "新しい道具が加わっても、ここは静かで、見通しのよい場所であり続けます。", contact: "お問い合わせ",
     srAvailable: "プレビュー版",
     srBody: "Java・JSF チームのための、根拠を示すコードレビュー。コピー＆ペーストの写し間違い、誤った比較、存在しない Bean のメンバーを指す EL などを、保存時・SVN のローカル変更・プロジェクト全体で見つけ、指摘ごとに根拠を示します。",
-    srFeatureOne: "Java・SQL パラメータ・XHTML/EL の組み込み規則 20 件", srFeatureTwo: "保存時、SVN のローカル変更、プロジェクト全体をレビュー", srFeatureThree: "エンジンは手元で動き、コードを外へ送らない",
+    srFeatureOne: "Java・SQL パラメータ・XHTML/EL の組み込み規則<span class='rule-count' data-rule-count-scope hidden> <span data-rule-count></span> 件</span>", srFeatureTwo: "保存時、SVN のローカル変更、プロジェクト全体をレビュー", srFeatureThree: "エンジンは手元で動き、コードを外へ送らない",
     srPanelTitle: "指摘の例", srPanelChip: "保存時", srFindOne: "7 番目と 8 番目で value7 を重複して読んでいる", srFindTwo: "Integer オブジェクトを == で比較している",
     srFindThree: "orderForm に totl というプロパティはない", srRules: "組み込み規則", srInstallEyebrow: "Get SmartReviewer", srInstallTitle: "IDE に導入する。",
     srPreviewBadge: "プレビュー版", srRulePackage: "組み込み規則パッケージ", srSigned: "Eclipse 版は署名済み", srLocalBadge: "コードは手元から出ない", srStepJavaTitle: "Java 17 を用意",
@@ -146,7 +146,7 @@
     closingTitle: "一次做好一个，长期使用。", closingBody: "即使以后加入更多工具，这里也会一直保持安静、清晰、容易理解。", contact: "联系",
     srAvailable: "预览版",
     srBody: "面向 Java 与 JSF 团队的可解释代码审查。在保存时、对 SVN 本地修改或整个工程，找出复制粘贴时的抄错、错误的比较方式、引用了不存在的 Bean 成员的 EL 等问题，并为每条告警给出证据。",
-    srFeatureOne: "20 条内置规则：Java、SQL 参数与 XHTML/EL", srFeatureTwo: "保存时审查、SVN 本地修改审查、整个工程审查", srFeatureThree: "引擎在本机运行，代码不出本机", srPanelTitle: "告警示例",
+    srFeatureOne: "<span class='rule-count' data-rule-count-scope hidden><span data-rule-count></span> 条</span>内置规则：Java、SQL 参数与 XHTML/EL", srFeatureTwo: "保存时审查、SVN 本地修改审查、整个工程审查", srFeatureThree: "引擎在本机运行，代码不出本机", srPanelTitle: "告警示例",
     srPanelChip: "保存时", srFindOne: "第 7、8 项重复读取 value7", srFindTwo: "用 == 比较 Integer 对象", srFindThree: "orderForm 没有 totl 属性", srRules: "内置规则",
     srInstallEyebrow: "获取 SmartReviewer", srInstallTitle: "安装到 IDE。", srPreviewBadge: "预览版", srRulePackage: "内置规则包", srSigned: "Eclipse 版已签名", srLocalBadge: "代码不出本机",
     srStepJavaTitle: "准备 Java 17",
@@ -179,7 +179,7 @@
     unsignedTitle: "서명 없는 항목 거부", unsignedBody: "이 정책을 <code>eclipse.ini</code>에 넣으면 서명 없는 콘텐츠가 경고가 아닌 실패가 됩니다.", offlineTitle: "오프라인 설치", offlineBody: "연결되지 않은 기기에서는 <strong>Add → Archive…</strong>로 업데이트 사이트 zip을 선택합니다.", downloadZip: "업데이트 사이트 zip 받기", requirementsTitle: "요구 사항", requirementsBody: "Eclipse 4.27 이상, JDK 17 이상. 영어·일본어·중국어 UI 지원.", supportTitle: "지원", supportBody: "문제나 요청에는 버전과 관련 오류 로그를 첨부하세요.", closingTitle: "오래 쓸 도구를 하나씩.", closingBody: "새 도구가 더해져도 이곳은 조용하고 명료한 공간으로 남습니다.", contact: "연락",
     srAvailable: "미리보기",
     srBody: "Java·JSF 팀을 위한, 근거를 보여 주는 코드 리뷰. 복사·붙여넣기 실수, 잘못된 비교, 존재하지 않는 Bean 멤버를 가리키는 EL 등을 저장할 때, SVN 로컬 변경, 프로젝트 전체에서 찾아내고 지적마다 근거를 보여 줍니다.",
-    srFeatureOne: "Java·SQL 파라미터·XHTML/EL 내장 규칙 20개", srFeatureTwo: "저장 시, SVN 로컬 변경, 프로젝트 전체 리뷰", srFeatureThree: "엔진은 로컬에서 실행되며 코드는 밖으로 나가지 않음",
+    srFeatureOne: "Java·SQL 파라미터·XHTML/EL 내장 규칙<span class='rule-count' data-rule-count-scope hidden> <span data-rule-count></span>개</span>", srFeatureTwo: "저장 시, SVN 로컬 변경, 프로젝트 전체 리뷰", srFeatureThree: "엔진은 로컬에서 실행되며 코드는 밖으로 나가지 않음",
     srPanelTitle: "지적 예시", srPanelChip: "저장 시", srFindOne: "7번째와 8번째 항목에서 value7을 중복해서 읽음", srFindTwo: "Integer 객체를 ==로 비교",
     srFindThree: "orderForm에 totl 속성이 없음", srRules: "내장 규칙", srInstallEyebrow: "SmartReviewer 받기", srInstallTitle: "IDE에 설치.", srPreviewBadge: "미리보기", srRulePackage: "내장 규칙 패키지",
     srSigned: "Eclipse 판 서명됨", srLocalBadge: "코드는 로컬에 유지", srStepJavaTitle: "Java 17 준비",
@@ -211,7 +211,7 @@
     unsignedTitle: "Refuser le non-signé", unsignedBody: "Ajoutez cette règle à <code>eclipse.ini</code> pour refuser le contenu non signé.", offlineTitle: "Installation hors ligne", offlineBody: "Sur une machine isolée, choisissez le zip via <strong>Add → Archive…</strong>.", downloadZip: "Télécharger le zip", requirementsTitle: "Prérequis", requirementsBody: "Eclipse 4.27 ou récent, JDK 17 ou récent. Interface en anglais, japonais et chinois.", supportTitle: "Assistance", supportBody: "Joignez la version et les lignes utiles du journal d'erreurs.", closingTitle: "Un outil durable à la fois.", closingBody: "Même avec de nouveaux outils, cet endroit restera calme et lisible.", contact: "Contact",
     srAvailable: "Préversion",
     srBody: "Une revue de code explicable pour les équipes Java et JSF. Elle repère les erreurs de copier-coller, les comparaisons trompeuses et les expressions EL qui visent des membres de bean inexistants — à l’enregistrement, dans les modifications SVN locales ou sur tout le projet — et montre les preuves de chaque signalement.",
-    srFeatureOne: "20 règles intégrées : Java, paramètres SQL et XHTML/EL",
+    srFeatureOne: "<span class='rule-count' data-rule-count-scope hidden><span data-rule-count></span> </span>règles intégrées : Java, paramètres SQL et XHTML/EL",
     srFeatureTwo: "Revue à l’enregistrement, des modifications SVN ou du projet entier",
     srFeatureThree: "Le moteur tourne sur votre machine ; le code n’en sort pas", srPanelTitle: "EXEMPLES DE SIGNALEMENTS",
     srPanelChip: "à l’enregistrement", srFindOne: "value7 lue pour les éléments 7 et 8", srFindTwo: "objets Integer comparés avec ==",
@@ -248,7 +248,7 @@
     unsignedTitle: "Rechazar contenido sin firma", unsignedBody: "Añade la política a <code>eclipse.ini</code> para rechazar contenido sin firma.", offlineTitle: "Instalación sin conexión", offlineBody: "En un equipo aislado, selecciona el zip con <strong>Add → Archive…</strong>.", downloadZip: "Descargar zip", requirementsTitle: "Requisitos", requirementsBody: "Eclipse 4.27 o posterior y JDK 17 o posterior. Interfaz en inglés, japonés y chino.", supportTitle: "Soporte", supportBody: "Incluye la versión y las líneas relevantes del registro de errores.", closingTitle: "Una herramienta duradera cada vez.", closingBody: "Aunque lleguen nuevas herramientas, este seguirá siendo un lugar sereno y legible.", contact: "Contacto",
     srAvailable: "Versión preliminar",
     srBody: "Revisión de código explicable para equipos Java y JSF. Detecta errores de copiar y pegar, comparaciones engañosas y expresiones EL que apuntan a miembros de bean inexistentes —al guardar, en los cambios locales de SVN o en todo el proyecto— y muestra las pruebas de cada aviso.",
-    srFeatureOne: "20 reglas integradas: Java, parámetros SQL y XHTML/EL", srFeatureTwo: "Revisión al guardar, de cambios SVN o del proyecto completo",
+    srFeatureOne: "<span class='rule-count' data-rule-count-scope hidden><span data-rule-count></span> </span>reglas integradas: Java, parámetros SQL y XHTML/EL", srFeatureTwo: "Revisión al guardar, de cambios SVN o del proyecto completo",
     srFeatureThree: "El motor se ejecuta en tu equipo; el código no sale de él", srPanelTitle: "EJEMPLOS DE AVISOS", srPanelChip: "al guardar",
     srFindOne: "value7 se lee en los elementos 7 y 8", srFindTwo: "objetos Integer comparados con ==", srFindThree: "orderForm no tiene la propiedad totl",
     srRules: "Reglas integradas", srInstallEyebrow: "Obtener SmartReviewer", srInstallTitle: "Instalar en tu IDE.", srPreviewBadge: "versión preliminar", srRulePackage: "Paquete de reglas integrado",
@@ -283,7 +283,7 @@
     unsignedTitle: "Unsigniertes ablehnen", unsignedBody: "Diese Regel in <code>eclipse.ini</code> lässt unsignierte Inhalte fehlschlagen.", offlineTitle: "Offline installieren", offlineBody: "Auf einem isolierten Rechner das Zip über <strong>Add → Archive…</strong> wählen.", downloadZip: "Update-Site-Zip laden", requirementsTitle: "Voraussetzungen", requirementsBody: "Eclipse 4.27 oder neuer und JDK 17 oder neuer. Oberfläche auf Englisch, Japanisch und Chinesisch.", supportTitle: "Support", supportBody: "Bitte Version und relevante Zeilen des Fehlerprotokolls mitsenden.", closingTitle: "Ein dauerhaftes Werkzeug nach dem anderen.", closingBody: "Auch mit neuen Werkzeugen bleibt dies ein ruhiger, übersichtlicher Ort.", contact: "Kontakt",
     srAvailable: "Vorschau",
     srBody: "Nachvollziehbares Code-Review für Java- und JSF-Teams. Es findet Copy-and-paste-Fehler, irreführende Vergleiche und EL-Ausdrücke, die auf nicht vorhandene Bean-Member zeigen – beim Speichern, in lokalen SVN-Änderungen oder im ganzen Projekt – und zeigt zu jedem Befund die Belege.",
-    srFeatureOne: "20 eingebaute Regeln für Java, SQL-Parameter und XHTML/EL",
+    srFeatureOne: "<span class='rule-count' data-rule-count-scope hidden><span data-rule-count></span> </span>eingebaute Regeln für Java, SQL-Parameter und XHTML/EL",
     srFeatureTwo: "Review beim Speichern, von SVN-Änderungen oder des ganzen Projekts",
     srFeatureThree: "Die Engine läuft auf Ihrem Rechner; der Code verlässt ihn nicht",
     srPanelTitle: "BEISPIELBEFUNDE", srPanelChip: "beim Speichern", srFindOne: "value7 wird für Eintrag 7 und 8 gelesen",
@@ -320,6 +320,18 @@
     languageMenu.appendChild(item);
   });
 
+  // The number of built-in rules is written by the SmartReviewer release next to its downloads (rule-count.txt). Until it has been
+  // read, the sentences read without a number and the panel's count row stays hidden, so that a release cannot leave a stale number.
+  var ruleCount = null;
+  function showRuleCount() {
+    if (!ruleCount) { return; }
+    document.querySelectorAll("[data-rule-count]").forEach(function (number) {
+      number.textContent = ruleCount;
+      var scope = number.closest("[data-rule-count-scope]");
+      if (scope) { scope.hidden = false; }
+    });
+  }
+
   function applyLanguage(id) {
     var translations = TRANSLATIONS[id] || EN;
     document.documentElement.lang = id;
@@ -331,6 +343,7 @@
       var value = translations[element.dataset.i18nTitle];
       if (value != null) { element.title = value; element.setAttribute("aria-label", value); }
     });
+    showRuleCount();
     var current = LANGUAGES.find(function (language) { return language.id === id; });
     languageNow.textContent = current ? current.name : "English";
     languageMenu.querySelectorAll("button").forEach(function (item) { item.setAttribute("aria-checked", String(item.dataset.language === id)); });
@@ -424,4 +437,13 @@
   // The built-in rule package version is written by the SmartReviewer release next to its downloads. The badge stays hidden
   // until the file has been read, so that a missing file never leaves a stale number.
   showVersion("smartreviewer/rule-package.txt", "sr-rule-package", "sr-rule-package-badge");
+  if (window.fetch) {
+    fetch("smartreviewer/rule-count.txt", { cache: "no-store" })
+      .then(function (response) { return response.ok ? response.text() : null; })
+      .then(function (text) {
+        var count = text && text.trim();
+        if (count && /^[1-9][0-9]{0,4}$/.test(count)) { ruleCount = count; showRuleCount(); }
+      })
+      .catch(function () { /* keep the sentences without a number */ });
+  }
 })();

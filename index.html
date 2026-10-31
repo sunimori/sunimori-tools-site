@@ -128,7 +128,7 @@
             <h3>SmartReviewer</h3>
             <p class="tool-description" data-i18n="srBody">Java・JSF チームのための、根拠を示すコードレビュー。コピー＆ペーストの写し間違い、誤った比較、存在しない Bean のメンバーを指す EL などを、保存時・SVN のローカル変更・プロジェクト全体で見つけ、指摘ごとに根拠を示します。</p>
             <ul class="feature-list">
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureOne">Java・SQL パラメータ・XHTML/EL の組み込み規則 20 件</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureOne">Java・SQL パラメータ・XHTML/EL の組み込み規則<span class="rule-count" data-rule-count-scope hidden> <span data-rule-count></span> 件</span></span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureTwo">保存時、SVN のローカル変更、プロジェクト全体をレビュー</span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-check"></use></svg><span data-i18n="srFeatureThree">エンジンは手元で動き、コードを外へ送らない</span></li>
             </ul>
@@ -143,7 +143,7 @@
               <li><span class="finding-severity warning">WARNING</span><code>OrderService.java:118</code><em>SR-JAVA-BOXED-EQ-001</em><p data-i18n="srFindTwo">Integer オブジェクトを == で比較している</p></li>
               <li><span class="finding-severity info">INFO</span><code>order.xhtml:42</code><em>SR-XHTML-EL-001</em><p data-i18n="srFindThree">orderForm に totl というプロパティはない</p></li>
             </ol>
-            <div class="panel-summary"><span data-i18n="srRules">組み込み規則</span><strong>20</strong></div>
+            <div class="panel-summary" data-rule-count-scope hidden><span data-i18n="srRules">組み込み規則</span><strong data-rule-count></strong></div>
           </div>
         </article>
 
