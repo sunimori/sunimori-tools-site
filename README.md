@@ -31,7 +31,9 @@ Each tool's release replaces only its own paths, so one tool's release never
 removes another tool or the page. The page reads each tool's version from its
 Eclipse update site, `eclipse/impact-analyzer/version.txt` and
 `eclipse/smartreviewer/version.txt`: the plug-in version with its build time
-(such as `0.1.3.202610190716`), as Eclipse shows it.
+(such as `0.1.3.202610190716`), as Eclipse shows it. The SmartReviewer badge also
+shows the version of the built-in rule package, read from `smartreviewer/rule-package.txt`
+(such as `0.19.0`).
 
 ## Publishing a new build
 

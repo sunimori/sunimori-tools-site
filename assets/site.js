@@ -52,7 +52,7 @@
     srFeatureOne: "20 built-in rules for Java, SQL parameters and XHTML/EL", srFeatureTwo: "Review on save, SVN local changes or the whole project",
     srFeatureThree: "The engine runs on your machine; code never leaves it", srPanelTitle: "SAMPLE FINDINGS", srPanelChip: "on save",
     srFindOne: "value7 is read for both item 7 and item 8", srFindTwo: "Integer objects compared with ==", srFindThree: "orderForm has no property totl",
-    srRules: "Built-in rules", srInstallEyebrow: "Get SmartReviewer", srInstallTitle: "Install it in your IDE.", srPreviewBadge: "preview",
+    srRules: "Built-in rules", srInstallEyebrow: "Get SmartReviewer", srInstallTitle: "Install it in your IDE.", srPreviewBadge: "preview", srRulePackage: "Built-in rule package",
     srSigned: "Eclipse build signed", srLocalBadge: "code stays local", srStepJavaTitle: "Prepare Java 17",
     srStepJavaBody: "The review engine runs as a separate Java 17+ process. IntelliJ IDEA’s bundled runtime works as is; Eclipse and VS Code use the configured JDK or <code>JAVA_HOME</code>.",
     srStepEclipseBody: "Add the URL above in <strong>Help → Install New Software…</strong>, select <strong>SmartReviewer</strong>, install and restart.",
@@ -102,7 +102,7 @@
     srFeatureOne: "Java・SQL パラメータ・XHTML/EL の組み込み規則 20 件", srFeatureTwo: "保存時、SVN のローカル変更、プロジェクト全体をレビュー", srFeatureThree: "エンジンは手元で動き、コードを外へ送らない",
     srPanelTitle: "指摘の例", srPanelChip: "保存時", srFindOne: "7 番目と 8 番目で value7 を重複して読んでいる", srFindTwo: "Integer オブジェクトを == で比較している",
     srFindThree: "orderForm に totl というプロパティはない", srRules: "組み込み規則", srInstallEyebrow: "Get SmartReviewer", srInstallTitle: "IDE に導入する。",
-    srPreviewBadge: "プレビュー版", srSigned: "Eclipse 版は署名済み", srLocalBadge: "コードは手元から出ない", srStepJavaTitle: "Java 17 を用意",
+    srPreviewBadge: "プレビュー版", srRulePackage: "組み込み規則パッケージ", srSigned: "Eclipse 版は署名済み", srLocalBadge: "コードは手元から出ない", srStepJavaTitle: "Java 17 を用意",
     srStepJavaBody: "レビューエンジンは Java 17 以降の別プロセスで動きます。IntelliJ IDEA は同梱の実行環境をそのまま使えます。Eclipse と VS Code は設定した JDK か <code>JAVA_HOME</code> を使います。",
     srStepEclipseBody: "<strong>Help → Install New Software…</strong> で上の URL を追加し、<strong>SmartReviewer</strong> を選んで導入し、再起動します。",
     srStepIdeaBody: "zip を取得し、展開せずに <strong>Settings → Plugins → ⚙ → Install Plugin from Disk…</strong> で選びます。",
@@ -148,7 +148,7 @@
     srBody: "面向 Java 与 JSF 团队的可解释代码审查。在保存时、对 SVN 本地修改或整个工程，找出复制粘贴时的抄错、错误的比较方式、引用了不存在的 Bean 成员的 EL 等问题，并为每条告警给出证据。",
     srFeatureOne: "20 条内置规则：Java、SQL 参数与 XHTML/EL", srFeatureTwo: "保存时审查、SVN 本地修改审查、整个工程审查", srFeatureThree: "引擎在本机运行，代码不出本机", srPanelTitle: "告警示例",
     srPanelChip: "保存时", srFindOne: "第 7、8 项重复读取 value7", srFindTwo: "用 == 比较 Integer 对象", srFindThree: "orderForm 没有 totl 属性", srRules: "内置规则",
-    srInstallEyebrow: "获取 SmartReviewer", srInstallTitle: "安装到 IDE。", srPreviewBadge: "预览版", srSigned: "Eclipse 版已签名", srLocalBadge: "代码不出本机",
+    srInstallEyebrow: "获取 SmartReviewer", srInstallTitle: "安装到 IDE。", srPreviewBadge: "预览版", srRulePackage: "内置规则包", srSigned: "Eclipse 版已签名", srLocalBadge: "代码不出本机",
     srStepJavaTitle: "准备 Java 17",
     srStepJavaBody: "审查引擎作为独立进程运行，需要 Java 17 及以上。IntelliJ IDEA 自带的运行时可直接使用；Eclipse 与 VS Code 使用设置中的 JDK 或 <code>JAVA_HOME</code>。",
     srStepEclipseBody: "在 <strong>Help → Install New Software…</strong> 中添加上面的 URL，选择 <strong>SmartReviewer</strong> 安装并重启。",
@@ -181,7 +181,7 @@
     srBody: "Java·JSF 팀을 위한, 근거를 보여 주는 코드 리뷰. 복사·붙여넣기 실수, 잘못된 비교, 존재하지 않는 Bean 멤버를 가리키는 EL 등을 저장할 때, SVN 로컬 변경, 프로젝트 전체에서 찾아내고 지적마다 근거를 보여 줍니다.",
     srFeatureOne: "Java·SQL 파라미터·XHTML/EL 내장 규칙 20개", srFeatureTwo: "저장 시, SVN 로컬 변경, 프로젝트 전체 리뷰", srFeatureThree: "엔진은 로컬에서 실행되며 코드는 밖으로 나가지 않음",
     srPanelTitle: "지적 예시", srPanelChip: "저장 시", srFindOne: "7번째와 8번째 항목에서 value7을 중복해서 읽음", srFindTwo: "Integer 객체를 ==로 비교",
-    srFindThree: "orderForm에 totl 속성이 없음", srRules: "내장 규칙", srInstallEyebrow: "SmartReviewer 받기", srInstallTitle: "IDE에 설치.", srPreviewBadge: "미리보기",
+    srFindThree: "orderForm에 totl 속성이 없음", srRules: "내장 규칙", srInstallEyebrow: "SmartReviewer 받기", srInstallTitle: "IDE에 설치.", srPreviewBadge: "미리보기", srRulePackage: "내장 규칙 패키지",
     srSigned: "Eclipse 판 서명됨", srLocalBadge: "코드는 로컬에 유지", srStepJavaTitle: "Java 17 준비",
     srStepJavaBody: "리뷰 엔진은 Java 17 이상의 별도 프로세스로 실행됩니다. IntelliJ IDEA는 내장 런타임을 그대로 쓰고, Eclipse와 VS Code는 설정한 JDK나 <code>JAVA_HOME</code>을 씁니다.",
     srStepEclipseBody: "<strong>Help → Install New Software…</strong>에서 위 URL을 추가하고 <strong>SmartReviewer</strong>를 선택해 설치한 뒤 재시작합니다.",
@@ -216,7 +216,7 @@
     srFeatureThree: "Le moteur tourne sur votre machine ; le code n’en sort pas", srPanelTitle: "EXEMPLES DE SIGNALEMENTS",
     srPanelChip: "à l’enregistrement", srFindOne: "value7 lue pour les éléments 7 et 8", srFindTwo: "objets Integer comparés avec ==",
     srFindThree: "orderForm n’a pas de propriété totl", srRules: "Règles intégrées", srInstallEyebrow: "Obtenir SmartReviewer",
-    srInstallTitle: "L’installer dans votre IDE.", srPreviewBadge: "préversion", srSigned: "version Eclipse signée", srLocalBadge: "le code reste local",
+    srInstallTitle: "L’installer dans votre IDE.", srPreviewBadge: "préversion", srRulePackage: "Paquet de règles intégré", srSigned: "version Eclipse signée", srLocalBadge: "le code reste local",
     srStepJavaTitle: "Préparer Java 17",
     srStepJavaBody: "Le moteur de revue tourne dans un processus Java 17+ séparé. IntelliJ IDEA utilise son environnement intégré ; Eclipse et VS Code utilisent le JDK configuré ou <code>JAVA_HOME</code>.",
     srStepEclipseBody: "Ajoutez l’URL dans <strong>Help → Install New Software…</strong>, choisissez <strong>SmartReviewer</strong>, installez et redémarrez.",
@@ -251,7 +251,7 @@
     srFeatureOne: "20 reglas integradas: Java, parámetros SQL y XHTML/EL", srFeatureTwo: "Revisión al guardar, de cambios SVN o del proyecto completo",
     srFeatureThree: "El motor se ejecuta en tu equipo; el código no sale de él", srPanelTitle: "EJEMPLOS DE AVISOS", srPanelChip: "al guardar",
     srFindOne: "value7 se lee en los elementos 7 y 8", srFindTwo: "objetos Integer comparados con ==", srFindThree: "orderForm no tiene la propiedad totl",
-    srRules: "Reglas integradas", srInstallEyebrow: "Obtener SmartReviewer", srInstallTitle: "Instalar en tu IDE.", srPreviewBadge: "versión preliminar",
+    srRules: "Reglas integradas", srInstallEyebrow: "Obtener SmartReviewer", srInstallTitle: "Instalar en tu IDE.", srPreviewBadge: "versión preliminar", srRulePackage: "Paquete de reglas integrado",
     srSigned: "versión Eclipse firmada", srLocalBadge: "el código queda en local", srStepJavaTitle: "Preparar Java 17",
     srStepJavaBody: "El motor de revisión se ejecuta en un proceso Java 17+ aparte. IntelliJ IDEA usa su entorno integrado; Eclipse y VS Code usan el JDK configurado o <code>JAVA_HOME</code>.",
     srStepEclipseBody: "Añade la URL en <strong>Help → Install New Software…</strong>, elige <strong>SmartReviewer</strong>, instala y reinicia.",
@@ -288,7 +288,7 @@
     srFeatureThree: "Die Engine läuft auf Ihrem Rechner; der Code verlässt ihn nicht",
     srPanelTitle: "BEISPIELBEFUNDE", srPanelChip: "beim Speichern", srFindOne: "value7 wird für Eintrag 7 und 8 gelesen",
     srFindTwo: "Integer-Objekte mit == verglichen", srFindThree: "orderForm hat keine Eigenschaft totl", srRules: "Eingebaute Regeln",
-    srInstallEyebrow: "SmartReviewer beziehen", srInstallTitle: "In Ihrer IDE installieren.", srPreviewBadge: "Vorschau",
+    srInstallEyebrow: "SmartReviewer beziehen", srInstallTitle: "In Ihrer IDE installieren.", srPreviewBadge: "Vorschau", srRulePackage: "Eingebautes Regelpaket",
     srSigned: "Eclipse-Version signiert", srLocalBadge: "Code bleibt lokal", srStepJavaTitle: "Java 17 bereitstellen",
     srStepJavaBody: "Die Review-Engine läuft als eigener Java-17+-Prozess. IntelliJ IDEA nutzt die mitgelieferte Laufzeit; Eclipse und VS Code nutzen das eingestellte JDK oder <code>JAVA_HOME</code>.",
     srStepEclipseBody: "Fügen Sie die URL unter <strong>Help → Install New Software…</strong> hinzu, wählen Sie <strong>SmartReviewer</strong>, installieren Sie und starten Sie neu.",
@@ -403,7 +403,7 @@
   // The version badges follow the published files, not this page. The strings in
   // the HTML are only fallbacks -- hardcoding them here meant a release could (and
   // did) leave a stale number on the page. Each tool's release writes its own file.
-  function showVersion(url, id) {
+  function showVersion(url, id, badgeId) {
     var versionBadge = document.getElementById(id);
     if (!versionBadge || !window.fetch) { return; }
     fetch(url, { cache: "no-store" })
@@ -411,10 +411,17 @@
       .then(function (text) {
         if (!text) { return; }
         var version = text.trim();
-        if (/^[0-9][0-9A-Za-z._-]*$/.test(version)) { versionBadge.textContent = version; }
+        if (/^[0-9][0-9A-Za-z._-]*$/.test(version)) {
+          versionBadge.textContent = version;
+          var badge = badgeId && document.getElementById(badgeId);
+          if (badge) { badge.hidden = false; }
+        }
       })
       .catch(function () { /* keep the fallback text */ });
   }
   showVersion("eclipse/impact-analyzer/version.txt", "plugin-version");
   showVersion("eclipse/smartreviewer/version.txt", "sr-version");
+  // The built-in rule package version is written by the SmartReviewer release next to its downloads. The badge stays hidden
+  // until the file has been read, so that a missing file never leaves a stale number.
+  showVersion("smartreviewer/rule-package.txt", "sr-rule-package", "sr-rule-package-badge");
 })();

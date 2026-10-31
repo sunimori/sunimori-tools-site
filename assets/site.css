@@ -234,6 +234,7 @@ svg { display: block; }
 .release-badges > span { min-height: 28px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--line); border-radius: 99px; color: var(--ink-muted); font: 10px/1 var(--mono); }
 .release-badges .signed { color: var(--green); border-color: rgba(118,215,173,.25); }
 .release-badges .preview { color: var(--amber); border-color: rgba(225,182,95,.3); }
+.release-badges > span[hidden] { display: none; }
 .release-badges svg { width: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .install-console { overflow: hidden; border: 1px solid var(--line-strong); border-radius: 18px; background: #0e141b; box-shadow: 0 20px 70px rgba(0,0,0,.22); }
 .console-label { height: 43px; display: flex; justify-content: space-between; align-items: center; padding: 0 17px; border-bottom: 1px solid var(--line); color: var(--ink-muted); font: 600 9px/1 var(--mono); letter-spacing: .12em; }
