@@ -35,6 +35,8 @@ Eclipse update site, `eclipse/impact-analyzer/version.txt` and
 shows the version of the built-in rule package, read from `smartreviewer/rule-package.txt`
 (such as `0.19.0`), and the SmartReviewer card shows the number of built-in rules, read from
 `smartreviewer/rule-count.txt` (such as `140`). Both files are written by the SmartReviewer release.
+The SmartReviewer card also links to the rule page, `smartreviewer/rules/` (every built-in rule with its examples in Japanese,
+Chinese and English), which the SmartReviewer release generates and replaces like its other files.
 
 ## Publishing a new build
 
