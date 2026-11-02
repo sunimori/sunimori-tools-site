@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#090c10">
+<title>Built-in rules — SmartReviewer</title>
+<link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="rules.css">
+<script>
+(function () {
+  var known = ["ja", "zh", "en"], saved = null;
+  try { saved = localStorage.getItem("sunimori.language"); } catch (ignore) { /* Use the browser's language. */ }
+  var wanted = (saved ? [saved] : []).concat(navigator.languages || [navigator.language || "en"]);
+  var chosen = wanted.map(function (l) { return String(l).toLowerCase().split("-")[0]; })
+    .filter(function (l) { return known.indexOf(l) >= 0; })[0] || "en";
+  location.replace(chosen + ".html" + location.hash);
+}());
+</script>
+</head>
+<body>
+<main class="chooser">
+<p class="eyebrow">SmartReviewer</p>
+<ul><li><a href="ja.html" lang="ja">組み込みルール一覧 (日本語)</a></li><li><a href="zh.html" lang="zh">内置规则一览 (中文)</a></li><li><a href="en.html" lang="en">Built-in rules (English)</a></li></ul>
+</main>
+</body>
+</html>

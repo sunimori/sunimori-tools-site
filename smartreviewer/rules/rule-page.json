@@ -1,0 +1,572 @@
+{
+ "packageId": "builtin-java",
+ "packageVersion": "0.20.1",
+ "engineVersion": "0.1.21",
+ "languages": [
+  "ja",
+  "zh",
+  "en"
+ ],
+ "rules": [
+  {
+   "number": 1,
+   "id": "SR-CFG-WEBXML-001"
+  },
+  {
+   "number": 2,
+   "id": "SR-JAVA-ACCESSOR-FIELD-001"
+  },
+  {
+   "number": 3,
+   "id": "SR-JAVA-ARRAY-001"
+  },
+  {
+   "number": 4,
+   "id": "SR-JAVA-ARRAY-EQUALS-001"
+  },
+  {
+   "number": 5,
+   "id": "SR-JAVA-ARRAY-TO-STRING-001"
+  },
+  {
+   "number": 6,
+   "id": "SR-JAVA-ASSIGN-CONDITION-001"
+  },
+  {
+   "number": 7,
+   "id": "SR-JAVA-ASYNC-SELF-001"
+  },
+  {
+   "number": 8,
+   "id": "SR-JAVA-BIGDECIMAL-DIVIDE-001"
+  },
+  {
+   "number": 9,
+   "id": "SR-JAVA-BIGDECIMAL-DOUBLE-001"
+  },
+  {
+   "number": 10,
+   "id": "SR-JAVA-BIGDECIMAL-EQUALS-001"
+  },
+  {
+   "number": 11,
+   "id": "SR-JAVA-BIGDECIMAL-SCALE-001"
+  },
+  {
+   "number": 12,
+   "id": "SR-JAVA-BOXED-EQ-001"
+  },
+  {
+   "number": 13,
+   "id": "SR-JAVA-CALENDAR-FIELD-001"
+  },
+  {
+   "number": 14,
+   "id": "SR-JAVA-CALENDAR-HOUR-001"
+  },
+  {
+   "number": 15,
+   "id": "SR-JAVA-CALENDAR-MONTH-001"
+  },
+  {
+   "number": 16,
+   "id": "SR-JAVA-CHARSET-NAME-001"
+  },
+  {
+   "number": 17,
+   "id": "SR-JAVA-COMPARATOR-SUBTRACT-001"
+  },
+  {
+   "number": 18,
+   "id": "SR-JAVA-CONDITION-CONTRADICTION-001"
+  },
+  {
+   "number": 19,
+   "id": "SR-JAVA-COPY-MISMATCH-001"
+  },
+  {
+   "number": 20,
+   "id": "SR-JAVA-DATE-12-HOUR-001"
+  },
+  {
+   "number": 21,
+   "id": "SR-JAVA-DATE-DAY-OF-YEAR-001"
+  },
+  {
+   "number": 22,
+   "id": "SR-JAVA-DATE-MILLIS-SECOND-001"
+  },
+  {
+   "number": 23,
+   "id": "SR-JAVA-DATE-MINUTE-MONTH-001"
+  },
+  {
+   "number": 24,
+   "id": "SR-JAVA-DATE-WEEK-YEAR-001"
+  },
+  {
+   "number": 25,
+   "id": "SR-JAVA-DATE-YEAR-001"
+  },
+  {
+   "number": 26,
+   "id": "SR-JAVA-DEFAULT-CHARSET-001"
+  },
+  {
+   "number": 27,
+   "id": "SR-JAVA-DOUBLE-CHECKED-LOCKING-001"
+  },
+  {
+   "number": 28,
+   "id": "SR-JAVA-DUP-CONDITION-001"
+  },
+  {
+   "number": 29,
+   "id": "SR-JAVA-DUP-KEY-001"
+  },
+  {
+   "number": 30,
+   "id": "SR-JAVA-DUP-SETTER-001"
+  },
+  {
+   "number": 31,
+   "id": "SR-JAVA-EMPTY-BODY-001"
+  },
+  {
+   "number": 32,
+   "id": "SR-JAVA-EMPTY-CATCH-001"
+  },
+  {
+   "number": 33,
+   "id": "SR-JAVA-EMPTY-STRING-EQ-001"
+  },
+  {
+   "number": 34,
+   "id": "SR-JAVA-EQUALS-HASHCODE-001"
+  },
+  {
+   "number": 35,
+   "id": "SR-JAVA-EQUALS-OVERLOAD-001"
+  },
+  {
+   "number": 36,
+   "id": "SR-JAVA-EQUALS-TYPES-001"
+  },
+  {
+   "number": 37,
+   "id": "SR-JAVA-EXECUTOR-SHUTDOWN-001"
+  },
+  {
+   "number": 38,
+   "id": "SR-JAVA-FILE-RESULT-001"
+  },
+  {
+   "number": 39,
+   "id": "SR-JAVA-FINALLY-JUMP-001"
+  },
+  {
+   "number": 40,
+   "id": "SR-JAVA-FIXED-LIST-001"
+  },
+  {
+   "number": 41,
+   "id": "SR-JAVA-FOREACH-MODIFY-001"
+  },
+  {
+   "number": 42,
+   "id": "SR-JAVA-FORMAT-ARGS-001"
+  },
+  {
+   "number": 43,
+   "id": "SR-JAVA-HARDCODED-ENV-001"
+  },
+  {
+   "number": 44,
+   "id": "SR-JAVA-IDENTICAL-BRANCHES-001"
+  },
+  {
+   "number": 45,
+   "id": "SR-JAVA-IDENTICAL-OPERANDS-001"
+  },
+  {
+   "number": 46,
+   "id": "SR-JAVA-IGNORED-RESULT-001"
+  },
+  {
+   "number": 47,
+   "id": "SR-JAVA-INT-DIV-001"
+  },
+  {
+   "number": 48,
+   "id": "SR-JAVA-INT-OVERFLOW-001"
+  },
+  {
+   "number": 49,
+   "id": "SR-JAVA-INTERRUPT-001"
+  },
+  {
+   "number": 50,
+   "id": "SR-JAVA-IO-READ-RESULT-001"
+  },
+  {
+   "number": 51,
+   "id": "SR-JAVA-JDBC-BATCH-001"
+  },
+  {
+   "number": 52,
+   "id": "SR-JAVA-JDBC-INDEX-001"
+  },
+  {
+   "number": 53,
+   "id": "SR-JAVA-JSF-SCOPE-MISMATCH-001"
+  },
+  {
+   "number": 54,
+   "id": "SR-JAVA-JSF-STALE-CONTEXT-001"
+  },
+  {
+   "number": 55,
+   "id": "SR-JAVA-LENIENT-DATE-001"
+  },
+  {
+   "number": 56,
+   "id": "SR-JAVA-LOCK-RELEASE-001"
+  },
+  {
+   "number": 57,
+   "id": "SR-JAVA-LOOP-VAR-001"
+  },
+  {
+   "number": 58,
+   "id": "SR-JAVA-MYBATIS-SESSION-001"
+  },
+  {
+   "number": 59,
+   "id": "SR-JAVA-NETWORK-TIMEOUT-001"
+  },
+  {
+   "number": 60,
+   "id": "SR-JAVA-NULL-CHECK-001"
+  },
+  {
+   "number": 61,
+   "id": "SR-JAVA-NULL-DEREF-001"
+  },
+  {
+   "number": 62,
+   "id": "SR-JAVA-ODD-CHECK-001"
+  },
+  {
+   "number": 63,
+   "id": "SR-JAVA-PLACEHOLDER-ARGS-001"
+  },
+  {
+   "number": 64,
+   "id": "SR-JAVA-POI-STYLE-LOOP-001"
+  },
+  {
+   "number": 65,
+   "id": "SR-JAVA-RANDOM-INT-001"
+  },
+  {
+   "number": 66,
+   "id": "SR-JAVA-REGEX-LITERAL-001"
+  },
+  {
+   "number": 67,
+   "id": "SR-JAVA-REGEX-REPLACEMENT-001"
+  },
+  {
+   "number": 68,
+   "id": "SR-JAVA-RESOURCE-LEAK-001"
+  },
+  {
+   "number": 69,
+   "id": "SR-JAVA-SELF-ASSIGN-001"
+  },
+  {
+   "number": 70,
+   "id": "SR-JAVA-SEQUENCE-001"
+  },
+  {
+   "number": 71,
+   "id": "SR-JAVA-SETTER-PARAM-001"
+  },
+  {
+   "number": 72,
+   "id": "SR-JAVA-SHARED-FORMAT-001"
+  },
+  {
+   "number": 73,
+   "id": "SR-JAVA-SINGLETON-FIELD-001"
+  },
+  {
+   "number": 74,
+   "id": "SR-JAVA-STREAM-NO-TERMINAL-001"
+  },
+  {
+   "number": 75,
+   "id": "SR-JAVA-STREAM-REUSE-001"
+  },
+  {
+   "number": 76,
+   "id": "SR-JAVA-STRING-EQ-001"
+  },
+  {
+   "number": 77,
+   "id": "SR-JAVA-SWITCH-FALLTHROUGH-001"
+  },
+  {
+   "number": 78,
+   "id": "SR-JAVA-THREAD-INSTANCE-INTERRUPTED-001"
+  },
+  {
+   "number": 79,
+   "id": "SR-JAVA-THREADLOCAL-CLEANUP-001"
+  },
+  {
+   "number": 80,
+   "id": "SR-JAVA-TRANSACTION-SELF-001"
+  },
+  {
+   "number": 81,
+   "id": "SR-JAVA-TRANSACTIONAL-ROLLBACK-001"
+  },
+  {
+   "number": 82,
+   "id": "SR-JAVA-UNLIKELY-ARG-001"
+  },
+  {
+   "number": 83,
+   "id": "SR-JAVA-UNMODIFIABLE-MODIFY-001"
+  },
+  {
+   "number": 84,
+   "id": "SR-JAVA-UNTHROWN-EXCEPTION-001"
+  },
+  {
+   "number": 85,
+   "id": "SR-JAVA-WAIT-CONDITION-001"
+  },
+  {
+   "number": 86,
+   "id": "SR-MYBATIS-DUP-ID-001"
+  },
+  {
+   "number": 87,
+   "id": "SR-MYBATIS-DYNAMIC-WHERE-001"
+  },
+  {
+   "number": 88,
+   "id": "SR-MYBATIS-INVALID-SQL-001"
+  },
+  {
+   "number": 89,
+   "id": "SR-MYBATIS-OGNL-TEST-001"
+  },
+  {
+   "number": 90,
+   "id": "SR-MYBATIS-PARAM-NAME-001"
+  },
+  {
+   "number": 91,
+   "id": "SR-MYBATIS-REFERENCE-001"
+  },
+  {
+   "number": 92,
+   "id": "SR-MYBATIS-UNBOUND-METHOD-001"
+  },
+  {
+   "number": 93,
+   "id": "SR-PERF-FORMAT-IN-LOOP-001"
+  },
+  {
+   "number": 94,
+   "id": "SR-PERF-KEYSET-GET-001"
+  },
+  {
+   "number": 95,
+   "id": "SR-PERF-LINKEDLIST-GET-001"
+  },
+  {
+   "number": 96,
+   "id": "SR-PERF-LIST-SEARCH-001"
+  },
+  {
+   "number": 97,
+   "id": "SR-PERF-LOG-CONCAT-001"
+  },
+  {
+   "number": 98,
+   "id": "SR-PERF-QUERY-IN-LOOP-001"
+  },
+  {
+   "number": 99,
+   "id": "SR-PERF-REGEX-IN-LOOP-001"
+  },
+  {
+   "number": 100,
+   "id": "SR-PERF-STRING-CONCAT-001"
+  },
+  {
+   "number": 101,
+   "id": "SR-PERF-UNBUFFERED-IO-001"
+  },
+  {
+   "number": 102,
+   "id": "SR-SEC-COMMAND-INJECTION-001"
+  },
+  {
+   "number": 103,
+   "id": "SR-SEC-COOKIE-FLAGS-001"
+  },
+  {
+   "number": 104,
+   "id": "SR-SEC-DESERIALIZATION-001"
+  },
+  {
+   "number": 105,
+   "id": "SR-SEC-DISPATCH-001"
+  },
+  {
+   "number": 106,
+   "id": "SR-SEC-HARDCODED-CREDENTIAL-001"
+  },
+  {
+   "number": 107,
+   "id": "SR-SEC-HARDCODED-KEY-001"
+  },
+  {
+   "number": 108,
+   "id": "SR-SEC-IDOR-001"
+  },
+  {
+   "number": 109,
+   "id": "SR-SEC-LDAP-INJECTION-001"
+  },
+  {
+   "number": 110,
+   "id": "SR-SEC-LOG-SECRET-001"
+  },
+  {
+   "number": 111,
+   "id": "SR-SEC-MAIL-HEADER-INJECTION-001"
+  },
+  {
+   "number": 112,
+   "id": "SR-SEC-MYBATIS-DOLLAR-001"
+  },
+  {
+   "number": 113,
+   "id": "SR-SEC-MYBATIS-XML-DOLLAR-001"
+  },
+  {
+   "number": 114,
+   "id": "SR-SEC-OPEN-REDIRECT-001"
+  },
+  {
+   "number": 115,
+   "id": "SR-SEC-PATH-TRAVERSAL-001"
+  },
+  {
+   "number": 116,
+   "id": "SR-SEC-SECURERANDOM-SEED-001"
+  },
+  {
+   "number": 117,
+   "id": "SR-SEC-SQL-DYNAMIC-001"
+  },
+  {
+   "number": 118,
+   "id": "SR-SEC-SQL-INJECTION-001"
+  },
+  {
+   "number": 119,
+   "id": "SR-SEC-SSRF-001"
+  },
+  {
+   "number": 120,
+   "id": "SR-SEC-STATIC-IV-001"
+  },
+  {
+   "number": 121,
+   "id": "SR-SEC-TLS-PROTOCOL-001"
+  },
+  {
+   "number": 122,
+   "id": "SR-SEC-TRUST-ALL-001"
+  },
+  {
+   "number": 123,
+   "id": "SR-SEC-VULN-DEPENDENCY-001"
+  },
+  {
+   "number": 124,
+   "id": "SR-SEC-WEAK-CIPHER-001"
+  },
+  {
+   "number": 125,
+   "id": "SR-SEC-WEAK-HASH-001"
+  },
+  {
+   "number": 126,
+   "id": "SR-SEC-WEAK-RANDOM-001"
+  },
+  {
+   "number": 127,
+   "id": "SR-SEC-XSS-ESCAPE-001"
+  },
+  {
+   "number": 128,
+   "id": "SR-SEC-XSS-WRITER-001"
+  },
+  {
+   "number": 129,
+   "id": "SR-SEC-XXE-001"
+  },
+  {
+   "number": 130,
+   "id": "SR-SEC-ZIP-PATH-001"
+  },
+  {
+   "number": 131,
+   "id": "SR-SQL-PARAM-001"
+  },
+  {
+   "number": 132,
+   "id": "SR-SVN-REFDELTA-001"
+  },
+  {
+   "number": 133,
+   "id": "SR-WEB-EXEC-AFTER-REDIRECT-001"
+  },
+  {
+   "number": 134,
+   "id": "SR-XHTML-COMPONENT-REF-001"
+  },
+  {
+   "number": 135,
+   "id": "SR-XHTML-DATETIME-TZ-001"
+  },
+  {
+   "number": 136,
+   "id": "SR-XHTML-DUP-ID-001"
+  },
+  {
+   "number": 137,
+   "id": "SR-XHTML-EL-001"
+  },
+  {
+   "number": 138,
+   "id": "SR-XHTML-NESTED-FORM-001"
+  },
+  {
+   "number": 139,
+   "id": "SR-XHTML-PROPERTY-ACCESS-001"
+  },
+  {
+   "number": 140,
+   "id": "SR-XHTML-SCRIPT-EL-001"
+  }
+ ]
+}
