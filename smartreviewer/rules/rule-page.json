@@ -1,7 +1,7 @@
 {
  "packageId": "builtin-java",
- "packageVersion": "0.20.1",
- "engineVersion": "0.1.21",
+ "packageVersion": "0.20.2",
+ "engineVersion": "0.1.22",
  "languages": [
   "ja",
   "zh",

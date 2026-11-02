@@ -21,9 +21,9 @@
 <section class="intro wrap">
 <p class="eyebrow">SmartReviewer</p>
 <h1>内置规则一览</h1>
-<p class="lead">规则包 builtin-java 0.20.1，共 140 条（常规 98 条、性能 10 条、安全 32 条）。</p>
+<p class="lead">规则包 builtin-java 0.20.2，共 140 条（常规 98 条、性能 10 条、安全 32 条）。</p>
 <p>No. 和顺序与 IDE 的规则一览（Eclipse 的设置和规则视图、IntelliJ IDEA、VS Code）、规则一览文档和规则示例集相同。No. 是固定的，增加规则时不会改变。</p>
-<p>代码是为测试编写的示例。警告消息与修改方法是用引擎 0.1.21 实际审查 NG 例时的输出。所有规则都不断言业务错误，只指出需要人确认的地方。</p>
+<p>代码是为测试编写的示例。警告消息与修改方法是用引擎 0.1.22 实际审查 NG 例时的输出。所有规则都不断言业务错误，只指出需要人确认的地方。</p>
 <p>示例是为了理解规则的行为而摘录的，并不证明规则的检测能力已被穷尽，也不证明没有被报告的代码没有问题。</p>
 </section>
 <section class="toolbar" aria-label="按 No.、规则 ID、名称搜索"><div class="wrap">
@@ -139,8 +139,8 @@
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-ARRAY-TO-STRING-001" data-no="5" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="5 sr-java-array-to-string-001 数组拼接或输出为 [i@… api 误用">
-<summary><span class="no">5</span><span class="main"><span class="name">数组拼接或输出为 [I@…</span><code class="id">SR-JAVA-ARRAY-TO-STRING-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-ARRAY-TO-STRING-001" data-no="5" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="5 sr-java-array-to-string-001 数组直接转换为字符串（输出 [i@1b6d3586） api 误用">
+<summary><span class="no">5</span><span class="main"><span class="name">数组直接转换为字符串（输出 [I@1b6d3586）</span><code class="id">SR-JAVA-ARRAY-TO-STRING-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">数组拼接到字符串（&quot;ids=&quot; + ids）、调用 toString()、传给 println／print、StringBuilder.append、String.valueOf、String.format 的格式参数（基本类型数组），或 Log4j 1／2、Commons Logging 的 info(Object) 等时，使用的是 Object.toString()，得到的是“[I@1b6d3586”这样的类型与哈希值，而不是内容；日志与画面上看不到实际的值。char[] 传给 println、append、valueOf 时按字符输出，不报告（拼接时仍报告）。需要类型信息。</p>
 <dl class="facts"><dt>分类</dt><dd>API 误用</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -281,8 +281,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-CALENDAR-FIELD-001" data-no="13" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="13 sr-java-calendar-field-001 calendar.day_of_week 直接当数组下标（周六越界） 日期与时间">
-<summary><span class="no">13</span><span class="main"><span class="name">Calendar.DAY_OF_WEEK 直接当数组下标（周六越界）</span><code class="id">SR-JAVA-CALENDAR-FIELD-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-CALENDAR-FIELD-001" data-no="13" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="13 sr-java-calendar-field-001 calendar.day_of_week 直接当数组下标：周六越界，其余日子差一天 日期与时间">
+<summary><span class="no">13</span><span class="main"><span class="name">Calendar.DAY_OF_WEEK 直接当数组下标：周六越界，其余日子差一天</span><code class="id">SR-JAVA-CALENDAR-FIELD-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">cal.get(Calendar.DAY_OF_WEEK) 从 SUNDAY = 1 数到 SATURDAY = 7，直接用作长度为 7 的数组的下标（names[cal.get(Calendar.DAY_OF_WEEK)]）时，周六的下标 7 越界（ArrayIndexOutOfBoundsException），其余的日子取到的都是下一天的名称。数组的长度必须能确定是 7：初始化器恰有 7 个元素、new T[7]（或值为 7 的常量）、只赋值一次的局部变量、final 字段、或在本文件里没有被重新赋值的 private 字段；下标可以是 get 调用本身，也可以是只赋值一次的局部变量（int dow = cal.get(Calendar.DAY_OF_WEEK); names[dow]）。恰有 7 个字符的字符串常量上的 charAt 同理（StringIndexOutOfBoundsException）。减 1 的写法（names[cal.get(Calendar.DAY_OF_WEEK) - 1]）、长度为 8 的表（第 0 项空着）、DateFormatSymbols 的 getShortWeekdays()（长度 8）、% 7、其他字段（MONTH 等）、长度不明的数组、可能在别处被替换的数组不报告。需要类型信息；get 调用的 receiver 类型无法解析，或者 Calendar 本身来自无法解析的库（例如类路径上没有 ICU 的 com.ibm.icu.util.Calendar），而下标写法看上去有问题时，报告覆盖说明而不是静默。已知限制：不检查 java.time 的 DayOfWeek.getValue()（周一为 1）和 List 下标；set(Calendar.HOUR, ...) 没有设置 AM_PM 的问题由 SR-JAVA-CALENDAR-HOUR-001 报告。</p>
 <dl class="facts"><dt>分类</dt><dd>日期与时间</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -298,8 +298,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-CALENDAR-HOUR-001" data-no="14" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="14 sr-java-calendar-hour-001 设置 calendar.hour 却没有设置 am_pm（结果随上午／下午而变） 日期与时间">
-<summary><span class="no">14</span><span class="main"><span class="name">设置 Calendar.HOUR 却没有设置 AM_PM（结果随上午／下午而变）</span><code class="id">SR-JAVA-CALENDAR-HOUR-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-CALENDAR-HOUR-001" data-no="14" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="14 sr-java-calendar-hour-001 设置 calendar.hour 却没有设置 am_pm：结果取决于调用时是上午还是下午 日期与时间">
+<summary><span class="no">14</span><span class="main"><span class="name">设置 Calendar.HOUR 却没有设置 AM_PM：结果取决于调用时是上午还是下午</span><code class="id">SR-JAVA-CALENDAR-HOUR-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">cal.set(Calendar.HOUR, h) 设置的是 12 小时制的小时（0 到 11），属于上午还是下午由 AM_PM 决定。方法里没有确定这个 Calendar 的 AM_PM 时，结果取决于它当时处在上午还是下午：用 Calendar.getInstance() 得到的日历，下午执行 set(Calendar.HOUR, 3) 得到 15:xx，上午得到 3:xx；用 set(Calendar.HOUR, 0) 把日期截断到零点时，下午的日期得到中午 12:00。按同一个 Calendar 变量在源码里的顺序判断。日历得到时间的地方（创建、重新赋值、setTime、setTimeInMillis）把代码分成一段一段，一段里有 clear() 或 set(Calendar.AM_PM, ...)，不论在 HOUR 之前还是之后，这一段的上午／下午就已确定，不报告；用 new GregorianCalendar(年, 月, 日)（午夜，即上午）或小时是常量的 new GregorianCalendar(年, 月, 日, 时, 分) 创建的日历，到下一次 setTime 为止同样不报告。setTime(...)、setTimeInMillis(...) 会让上午／下午重新取决于参数的时间，之前的 clear()、set(AM_PM)、午夜创建都不再算数，其后的 set(HOUR) 仍然报告。HOUR 的值取自同一个 Calendar 的 get(Calendar.HOUR)（直接写在调用里，或经只赋值一次的局部变量：int h = cal.get(Calendar.HOUR); cal.set(Calendar.HOUR, h)）时有意保持上午／下午，不报告。只 clear(Calendar.AM_PM) 不算（之后 set(HOUR) 会被忽略，结果仍取决于当前时间）。接收者是方法调用的结果（getCalendar().set(...)）时无法确定是哪个 Calendar，不报告；字段 Calendar 的 AM_PM 在别的方法里设置时仍会报告。add(Calendar.HOUR, n) 和 set(Calendar.HOUR_OF_DAY, h) 不报告。需要类型信息；set 调用的 receiver 类型无法解析，或者 Calendar 本身来自无法解析的库（例如类路径上没有 ICU 的 com.ibm.icu.util.Calendar），而 HOUR 没有设置 AM_PM 时，报告覆盖说明而不是静默。已知限制：按源码顺序判断，不区分分支和循环（循环的第二轮才受 setTime 影响的 set(HOUR) 看不到）；DAY_OF_WEEK 当数组下标的问题由 SR-JAVA-CALENDAR-FIELD-001 报告，不判断其他字段。</p>
 <dl class="facts"><dt>分类</dt><dd>日期与时间</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -317,8 +317,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-CALENDAR-MONTH-001" data-no="15" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="15 sr-java-calendar-month-001 从 0 开始的 calendar 月份被当作 1～12 使用 日期与时间">
-<summary><span class="no">15</span><span class="main"><span class="name">从 0 开始的 Calendar 月份被当作 1～12 使用</span><code class="id">SR-JAVA-CALENDAR-MONTH-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-CALENDAR-MONTH-001" data-no="15" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="15 sr-java-calendar-month-001 calendar 的月份从 0 开始，却当作 1 月起使用 日期与时间">
+<summary><span class="no">15</span><span class="main"><span class="name">Calendar 的月份从 0 开始，却当作 1 月起使用</span><code class="id">SR-JAVA-CALENDAR-MONTH-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">Calendar.get(Calendar.MONTH) 与 Date.getMonth() 从 0 开始（1 月是 0、12 月是 11）。不加 1 就拼接到字符串、输出、格式化（print、format、append、String.valueOf、Integer.toString），显示的月份少 1；与 12 比较（== 12、!= 12）的结果总是不变；Calendar.set(Calendar.MONTH, 12)、set(y, 12, d)、Date.setMonth(12)、Date.UTC(y, 12, ...) 与 new GregorianCalendar(y, 12, d) 中的 12 是下一年的 1 月。月份先放进只赋值一次的局部变量（int month = cal.get(Calendar.MONTH);）再拼接、输出或与 12 比较时同样报告。加上 1 后使用、或只在计算中使用的不报告；Integer.valueOf、ChoiceFormat.format 或自己的 format(int) 方法只是查表，不算显示；拼接或格式化后只与同样做成的日期文字比较（equals、compareTo 等，例如判断两个日期是否相同），或只作为 Map 的键时，偏差相同，默认也不报告（用法 KEY，参数 uses）。Calendar.MONTH 不需要类型信息，Date.getMonth() 与 set(y, m, d) 需要。</p>
 <dl class="facts"><dt>分类</dt><dd>日期与时间</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -336,8 +336,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-CHARSET-NAME-001" data-no="16" data-group="GENERAL" data-severity="INFO" data-target="java" data-search="16 sr-java-charset-name-001 字符集名称用了 shift_jis，而不是 windows-31j（ms932） api 误用">
-<summary><span class="no">16</span><span class="main"><span class="name">字符集名称用了 Shift_JIS，而不是 Windows-31J（MS932）</span><code class="id">SR-JAVA-CHARSET-NAME-001</code></span><span class="sev sev-INFO">信息</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-CHARSET-NAME-001" data-no="16" data-group="GENERAL" data-severity="INFO" data-target="java" data-search="16 sr-java-charset-name-001 字符集名称选用了 jis 标准的 shift_jis 映射，而不是 windows-31j（ms932） api 误用">
+<summary><span class="no">16</span><span class="main"><span class="name">字符集名称选用了 JIS 标准的 Shift_JIS 映射，而不是 Windows-31J（MS932）</span><code class="id">SR-JAVA-CHARSET-NAME-001</code></span><span class="sev sev-INFO">信息</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">JDK 的字符集名称 Shift_JIS（别名 SJIS、shift-jis、ms_kanji、x-sjis、csShiftJIS，名称不区分大小写）是 JIS 标准的映射，不是 Windows 所说的“Shift_JIS”（代码页 932，JDK 名称 Windows-31J，别名 MS932、windows-932、csWindows31J）。处理 Windows 产生或要交给 Windows 的数据（CSV、Excel、数据库的 MS932 列）时，用前一个名称会在不报错的情况下丢失或改变字符。下面的差异是用 JDK 17 对全部 1 至 2 字节的序列和全部 BMP 字符逐一比较得出的：（1）同一字节含义不同，共 7 个：0x8160 在 Shift_JIS 是 U+301C 〜（波浪线 WAVE DASH），在 Windows-31J 是 U+FF5E ～（FULLWIDTH TILDE）；0x8161 是 U+2016 ‖ 对 U+2225 ∥；0x817C 是 U+2212 − 对 U+FF0D －（全角连字符减号）；0x815C 是 U+2014 — 对 U+2015 ―；0x8191、0x8192、0x81CA 是 U+00A2 ¢、U+00A3 £、U+00AC ¬ 对 U+FFE0 ￠、U+FFE1 ￡、U+FFE2 ￢。（2）只有 Windows-31J 能处理：2,725 个双字节序列 Shift_JIS 无法解码（得到 U+FFFD），其中 NEC 选定的第 13 区 83 个（①至⑳、Ⅰ至Ⅹ、㈱、㈲、№、℡、㌔ 等）、NEC 选定的 IBM 扩展 374 个、IBM 扩展 388 个（ⅰ至ⅹ、￢、髙、﨑 等）、用户自定义区 1,880 个；对应地有 2,341 个 BMP 字符只有 Windows-31J 能编码，在 Shift_JIS 中编码成 ?。（3）反方向：U+301C、U+2016、U+2212、U+2014 这 4 个字符只有 Shift_JIS 能编码，Windows-31J 编码成 ?。其余 7,068 个字符两者的编码完全相同。报告的是出现在这些 JDK 方法里的字符集名称：new String(bytes, name)（含偏移长度的形式）、String.getBytes(name)、new InputStreamReader／OutputStreamWriter、Charset.forName、URLEncoder.encode／URLDecoder.decode、ByteArrayOutputStream.toString(name)、new PrintStream／PrintWriter／Scanner／Formatter（带字符集名称的构造器）、Channels.newReader／newWriter(…, name)、Transformer.setOutputProperty(OutputKeys.ENCODING, name)；名称可以是字面量、static final 常量、final 局部变量、只赋值一次的局部变量、字符串拼接，或者其中一个分支是这样的名称的条件表达式（flag ? &quot;Shift_JIS&quot; : &quot;UTF-8&quot;）。不报告 MS932、Windows-31J 及其别名，UTF-8 等其他名称，由调用者传入的名称，Charset.isSupported，也不报告没有写字符集的调用（那是 SR-JAVA-DEFAULT-CHARSET-001 的范围，两条规则不会报告同一处）。发现的文字对两个字符集问同样的问题，数字放在证据里：只有对方能解码的字节序列、只有对方能编码的 BMP 字符、含义不同的字节序列、只有本字符集能编码的 BMP 字符（Shift_JIS 的对方是 Windows-31J，EUC-JP 的对方是 x-eucJP-Open），所以每一句话对两个字符集都成立，也不会拿一个字符集的字节序列说另一个。EUC-JP 默认不报告（参数 includeEucJp 为 true 时才报告）：EUC-JP 通常是 Unix 系统之间交换数据的编码，这时标准映射才是双方的约定，所以改名并不总是修复；JDK 里的 EUC 字符集只有 EUC-JP（别名 Extended_UNIX_Code_Packed_Format_for_Japanese、csEUCPkdFmtjapanese、euc_jp、eucjis、eucjp、x-euc-jp、x-eucjp）、x-euc-jp-linux 和 x-eucJP-Open（别名 EUC_JP_Solaris、eucJP-open），没有 CP51932 或 eucJP-ms 这样与 Windows 的 EUC 对应的字符集。用 JDK 17 逐一比较 EUC-JP 与 x-eucJP-Open 的结果：只有 x-eucJP-Open 能解码的字节序列 563 个（457 个双字节、106 个三字节），其余能解码的序列（6,879 个双字节、6,067 个三字节）两者解码结果完全相同，没有含义不同的字节序列，0xA1C1 在两者中都是 U+301C 〜；只有 x-eucJP-Open 能编码的 BMP 字符 166 个（①、㈱、℡、Ⅰ、髙、﨑 等），EUC-JP 能编码而 x-eucJP-Open 不能编码的为 0 个。JDK 的 EUC-JP 能编码 U+FF5E ～ 和 U+2116 №；Windows-31J 能编码而 EUC-JP 不能编码的 BMP 字符有 2,058 个，x-eucJP-Open 仍有 1,892 个（例如 U+FF0D －、U+2225 ∥、U+FFE2 ￢），所以 x-eucJP-Open 补上了一部分，并不等于 Windows 的 EUC。Shift_JIS、Windows-31J、EUC-JP 和 x-eucJP-Open 在这个 JDK 里都属于模块 jdk.charsets（没有这个模块的精简运行时哪一个都没有）。这条规则只是提示：对方明确要求 JIS 标准映射（部分大型机接口等）时现有写法是对的，可以用抑制功能说明；与 Windows 交换数据时才需要改。需要类型信息；receiver 类型无法解析而参数是 Shift_JIS 的名称时，报告覆盖说明。已知限制：不检查 Servlet 的 setCharacterEncoding、Content-Type 里的 charset、JavaMail 和其他第三方库接受的字符集名称，也不检查 ISO-2022-JP 等其他日语字符集；CP932 这样的名称在 JDK 里指向 IBM 的字符集（CP932 是 x-IBM942C），既不是 Shift_JIS 也不是 Windows-31J，不属于这条规则；条件表达式只看两个分支各自是不是这样的名称，不推理条件。</p>
 <dl class="facts"><dt>分类</dt><dd>API 误用</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>中</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -777,8 +777,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-EQUALS-OVERLOAD-001" data-no="35" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="35 sr-java-equals-overload-001 equals 是重载而不是重写 equals(object) 比较与相等性">
-<summary><span class="no">35</span><span class="main"><span class="name">equals 是重载而不是重写 equals(Object)</span><code class="id">SR-JAVA-EQUALS-OVERLOAD-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-EQUALS-OVERLOAD-001" data-no="35" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="35 sr-java-equals-overload-001 equals 的参数不是 object（重载而不是重写） 比较与相等性">
+<summary><span class="no">35</span><span class="main"><span class="name">equals 的参数不是 Object（重载而不是重写）</span><code class="id">SR-JAVA-EQUALS-OVERLOAD-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">声明了 boolean equals(MyType other) 而不是重写 equals(Object)：这是重载，List.contains、Set、Map 的键、Objects.equals 以及以 Object 调用的地方仍然使用继承的 equals(Object)（通常比较引用），相等的对象在集合中找不到。只检查参数是本类（或其父类、子类）的 equals：参数类型无关的（例如文本类的 equals(String)）、抽象方法、重写父类已有 equals(T) 的方法（在父类处报告）不报告；类中同时声明了 equals(Object) 时默认不报告（重载只是辅助方法）。局部类和匿名类里声明的也检查。</p>
 <dl class="facts"><dt>分类</dt><dd>比较与相等性</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -893,8 +893,8 @@ public boolean equals(Object o) {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-FINALLY-JUMP-001" data-no="39" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="39 sr-java-finally-jump-001 finally 中的 return／throw 丢弃了异常 异常处理">
-<summary><span class="no">39</span><span class="main"><span class="name">finally 中的 return／throw 丢弃了异常</span><code class="id">SR-JAVA-FINALLY-JUMP-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-FINALLY-JUMP-001" data-no="39" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="39 sr-java-finally-jump-001 finally 中的 return／throw（异常被吞掉） 异常处理">
+<summary><span class="no">39</span><span class="main"><span class="name">finally 中的 return／throw（异常被吞掉）</span><code class="id">SR-JAVA-FINALLY-JUMP-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">finally 块中的 return、throw，或跳出 finally 的 break／continue：try 或 catch 中抛出的异常（以及 return 的值）被丢弃，调用方看不到错误，事后也无法知道发生了什么。throw 报告没有条件的（总是替换原来的异常）；if (error != null) throw error; 这样重新抛出 catch 中保存的异常的写法，以及调用 addSuppressed、有意处理多个异常的 finally 默认不报告（参数 reportConditionalThrows）。清理失败时在 finally 内部的 catch 中 throw 或 return（try { in.close(); } catch (IOException e) { throw new …; }）只在 try 与清理都失败时才覆盖原来的异常，是常见的旧式写法，默认也不报告（参数 reportCleanupFailures）。在 finally 内部被 try／catch 捕获的 throw、lambda 与匿名类中的语句不报告。</p>
 <dl class="facts"><dt>分类</dt><dd>异常处理</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -1246,8 +1246,8 @@ public class ScopeFromSuperclass extends ScopedBase {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-LENIENT-DATE-001" data-no="55" data-group="GENERAL" data-severity="INFO" data-target="java" data-search="55 sr-java-lenient-date-001 用宽松的 simpledateformat 校验日期 日期与时间">
-<summary><span class="no">55</span><span class="main"><span class="name">用宽松的 SimpleDateFormat 校验日期</span><code class="id">SR-JAVA-LENIENT-DATE-001</code></span><span class="sev sev-INFO">信息</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-LENIENT-DATE-001" data-no="55" data-group="GENERAL" data-severity="INFO" data-target="java" data-search="55 sr-java-lenient-date-001 用宽松的 simpledateformat 校验日期（没有 setlenient(false)） 日期与时间">
+<summary><span class="no">55</span><span class="main"><span class="name">用宽松的 SimpleDateFormat 校验日期（没有 setLenient(false)）</span><code class="id">SR-JAVA-LENIENT-DATE-001</code></span><span class="sev sev-INFO">信息</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">SimpleDateFormat（以及 DateFormat）默认是宽松的：parse(&quot;2023-02-30&quot;) 不抛 ParseException，得到 3 月 2 日；&quot;2023-13-01&quot; 得到 2024-01-01；&quot;HH:mm&quot; 的 &quot;25:61&quot; 得到次日 02:01。只靠 ParseException 判断日期是否有效的校验因此放过了不存在的日期。（用 JDK 逐个模式字母验证过：M、L、d、D、F、w、W、u、H、h、K、k、m、s、S 的取值范围在宽松解析时不被检查；只有年份的模式 yyyy 宽松解析只多接受年份 0，所以不报告；月份写成名称的 MMM、MMMM（以及 L）是文本，取不到范围之外的值，只有它们的模式、或者再加上年份的模式（MMM、yyyy-MMM）也不报告，和有范围的数字字段混在一起的 MMM-dd-yyyy 照常报告。）这条规则只报告“明显的校验场景”，因为大多数 parse 调用是转换，解析出的日期会被使用。条件是：DateFormat.parse(String) 的结果被丢弃（单独的语句，或赋给一个从不读取的局部变量）或只与 null 比较；调用位于 try 块里，catch ParseException（或 Exception、Throwable）的处理方式是拒绝输入：return false 或返回不是 true 的值、throw、给变量赋布尔字面量（ok = false）、用 add...／reject...／put 记录错误；并且确知格式是宽松的：就在调用处 new SimpleDateFormat(...) 或 DateFormat.getXxxInstance(...)，或由局部变量、private 字段持有这样创建的对象，而且同一方法里（字段则是同一个文件里）没有对它调用 setLenient（包括 setLenient(true)，那是有意的选择）、setCalendar、getCalendar，也没有把它交给别的方法、赋给别的变量或作为返回值。不报告：parse 的结果被使用的转换；parse 之后用 format 写回再比较的严格写法；处理程序只记录日志或返回 true；来自参数、方法返回值、ThreadLocal 的格式（不知道是否宽松）；非 private 的字段（别的类可能设置）；没有 try 的 parse（异常交给调用者处理）；NumberFormat 和 java.time；只有年份的模式。parse(String, ParsePosition) 不抛异常，不在范围内。发现里引用的超出范围的例子按模式选：日期字段用 &quot;2023-02-30&quot;，时间字段用 &quot;25:61&quot;，两种字段都有或模式不是常量时两个都引用。需要类型信息；receiver 类型无法解析而写法像是校验时，报告覆盖说明。已知限制：不跨方法跟踪格式（在别的方法里配置的格式看不到，但同一文件里对字段的配置能看到）；DateTimeFormatter 不在范围内。</p>
 <dl class="facts"><dt>分类</dt><dd>日期与时间</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>中</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -1280,8 +1280,8 @@ public class ScopeFromSuperclass extends ScopedBase {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-LOCK-RELEASE-001" data-no="56" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="56 sr-java-lock-release-001 lock 未在 finally 中可靠释放 线程与并发">
-<summary><span class="no">56</span><span class="main"><span class="name">Lock 未在 finally 中可靠释放</span><code class="id">SR-JAVA-LOCK-RELEASE-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-LOCK-RELEASE-001" data-no="56" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="56 sr-java-lock-release-001 lock 未可靠释放 线程与并发">
+<summary><span class="no">56</span><span class="main"><span class="name">Lock 未可靠释放</span><code class="id">SR-JAVA-LOCK-RELEASE-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">识别 Lock 的 lock/lockInterruptibly/tryLock（直接写在条件中，或存入变量后紧接着判断；tryLock 可以是 if 条件里 &amp;&amp; 的最后一个操作数，或 || 中取反后的最后一个操作数，也可以出现在 while (!lock.tryLock()) 之类的重试循环条件里）。优先匹配局部保护作用域，考虑异常、提前返回、循环累计获取和直接执行的 lambda 对接收者的修改；获取语句本身是 try 体的最后一条（lockInterruptibly、带超时的 tryLock）且所有 catch 都不会正常结束（return、throw 等）时，其后的判断与 try/finally 视为受保护；连续的 lock() 语句（其间可有无初始化或只用字面量初始化的局部变量声明）后紧跟的 try/finally 须释放其中每一把锁；for-each 逐个加锁后，在 finally 中用 for-each 遍历同一未修改集合解锁，视为全部释放；同一未修改接收者的 ReadWriteLock.readLock/writeLock，以及本项目源码中只 return 某个字段的无参 getter，视为稳定访问器；数组元素、Map／List 的 get、本文件中带参数且并非直接返回新对象的查找方法，在加锁与解锁的表达式相同且其中的变量未被修改时同样视为稳定（其他文件中的工厂和每次返回新对象的方法不作证明）。恒真条件的循环只要有 break、return、throw 或声明异常等出口就会到达 finally；没有任何出口的循环不会释放。finally 中可按本次 tryLock 的未修改结果或 JDK 锁的 isHeldByCurrentThread() 判断后释放，释放前给变量或本对象字段赋字面量／变量值，以及日志调用（java.util.logging、slf4j、log4j、commons-logging、System.out/err 的打印，参数只含名字、字面量、字符串拼接和无参 getter）、同一组连续加锁中其他锁的解锁、先 lock() 另一把锁再解锁（锁降级），都不会阻断释放；无关标志、任意工厂、辅助方法、其他可能抛出异常的调用、复杂布尔别名和跨方法所有权不作证明。检查方法、构造函数、静态／实例初始化块和 lambda 体中的语句；lambda 体是独立的一段，只看它里面的加锁与解锁。</p>
 <dl class="facts"><dt>分类</dt><dd>线程与并发</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>中</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -1409,8 +1409,8 @@ public class ScopeFromSuperclass extends ScopedBase {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-ODD-CHECK-001" data-no="62" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="62 sr-java-odd-check-001 x % 2 == 1 对负的奇数判断错误 数值计算">
-<summary><span class="no">62</span><span class="main"><span class="name">x % 2 == 1 对负的奇数判断错误</span><code class="id">SR-JAVA-ODD-CHECK-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-ODD-CHECK-001" data-no="62" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="62 sr-java-odd-check-001 x % 2 == 1 对负数判断错误 数值计算">
+<summary><span class="no">62</span><span class="main"><span class="name">x % 2 == 1 对负数判断错误</span><code class="id">SR-JAVA-ODD-CHECK-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">x % 2 == 1 用来判断奇数，但 Java 的 % 保留被除数的符号，负的奇数 % 2 是 -1，判断为偶数（x % 2 != 1 则把负的奇数当作偶数）。应写成 x % 2 != 0 或 (x &amp; 1) == 1。默认只报告可以看出可能为负数的值：hashCode()、从字符串转换的数（Integer.parseInt 等）、没有上限的 nextInt()／nextLong()、取负的值（还有 Objects.hash()、Long.hashCode()、Arrays.hashCode()），以及只被赋过这样一个值的局部变量（例如按哈希值分区；先声明、之后只赋值一次也算）。局部变量被再次赋值（h = h &amp; 0x7fffffff）、或在判断之前已排除负数（if (n &lt; 0) return; 或 n &gt;= 0 &amp;&amp; n % 2 == 1）时不报告。实际代码中奇偶判断的对象大多是宽度、件数、ID 等不会为负的值，这些以及正负不明的值按参数 values 报告。</p>
 <dl class="facts"><dt>分类</dt><dd>数值计算</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -1766,8 +1766,8 @@ public boolean currentThreadInterrupted() {
 
 </div>
 </details>
-<details class="rule" id="SR-JAVA-THREADLOCAL-CLEANUP-001" data-no="79" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="79 sr-java-threadlocal-cleanup-001 请求或任务的 threadlocal 未清理 线程与并发">
-<summary><span class="no">79</span><span class="main"><span class="name">请求或任务的 ThreadLocal 未清理</span><code class="id">SR-JAVA-THREADLOCAL-CLEANUP-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-JAVA-THREADLOCAL-CLEANUP-001" data-no="79" data-group="GENERAL" data-severity="WARNING" data-target="java" data-search="79 sr-java-threadlocal-cleanup-001 请求或任务 threadlocal 未清理 线程与并发">
+<summary><span class="no">79</span><span class="main"><span class="name">请求或任务 ThreadLocal 未清理</span><code class="id">SR-JAVA-THREADLOCAL-CLEANUP-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">仅检查 Servlet 请求参数、Spring Mapping 方法、Runnable.run、Callable.call，以及类型为 Runnable／Callable 的 lambda 体；清理须在 finally 中对同一未修改对象 remove（无条件，或写成 if (x.get() != null) x.remove()），其他 ThreadLocal 的 remove、日志调用（参数只含名字、字面量、字符串拼接和无参 getter）和赋值可以排在它之前，其他调用可能抛出异常而阻断清理，仍然报告；连续多个 set 后紧跟的 try/finally 须清理其中每一个；catch 中 set 的值由同一 try 的 finally 清理，set(null) 不是存入数据（多见于 catch／finally 中），本身不报告。无关布尔标志和重复调用任意工厂不能证明清理。恒真条件的循环只要有出口就会到达 finally。普通持久上下文方法不报告，不推断框架过滤器中的清理。</p>
 <dl class="facts"><dt>分类</dt><dd>线程与并发</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>中</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -1875,8 +1875,8 @@ public void partiallyListed() throws Exception { }</code></pre><div class="note"
 
 </div>
 </details>
-<details class="rule" id="SR-MYBATIS-DYNAMIC-WHERE-001" data-no="87" data-group="GENERAL" data-severity="WARNING" data-target="xml" data-search="87 sr-mybatis-dynamic-where-001 mybatis 更新或删除的条件可能全部消失 mybatis mapper">
-<summary><span class="no">87</span><span class="main"><span class="name">MyBatis 更新或删除的条件可能全部消失</span><code class="id">SR-MYBATIS-DYNAMIC-WHERE-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
+<details class="rule" id="SR-MYBATIS-DYNAMIC-WHERE-001" data-no="87" data-group="GENERAL" data-severity="WARNING" data-target="xml" data-search="87 sr-mybatis-dynamic-where-001 mybatis 更新或删除条件可能全部消失 mybatis mapper">
+<summary><span class="no">87</span><span class="main"><span class="name">MyBatis 更新或删除条件可能全部消失</span><code class="id">SR-MYBATIS-DYNAMIC-WHERE-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">常规</span></summary>
 <div class="body">
 <p class="description">以所有引用输入属性为 null 的具体条件构造 SQL，检查动态 where/trim/choose/本地 include（SQL 可以跨行书写）。输入属性包括 @Param 对象的属性路径（cond.xid != null）。未知 OGNL（含方法调用）、外部 include、bind 和不可执行的 foreach 空集合路径不判断，记录为说明（DYNAMIC_SQL_UNRESOLVED），不降低审查的覆盖范围；只有 XML 格式错误才是分析限制。静态无条件操作不在此规则范围；只有 SET 等部分是动态的、任何渲染结果（可选部分全部出现）中都没有 WHERE 的语句也不在范围内。只检查 MyBatis 3 的 &lt;mapper&gt;，iBatis 的 &lt;sqlMap&gt; 不在检查范围内。</p>
 <dl class="facts"><dt>分类</dt><dd>MyBatis Mapper</dd><dt>对象</dt><dd>XML（MyBatis／iBatis Mapper）</dd><dt>置信度</dt><dd>高</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
@@ -2691,8 +2691,8 @@ long priceInDollars(long id);</code></pre><div class="note"><p>SQL 字符串字�
 
 </div>
 </details>
-<details class="rule" id="SR-SEC-SSRF-001" data-no="119" data-group="SECURITY" data-severity="WARNING" data-target="java" data-search="119 sr-sec-ssrf-001 请求数据控制服务器的 http 目标（ssrf） 注入">
-<summary><span class="no">119</span><span class="main"><span class="name">请求数据控制服务器的 HTTP 目标（SSRF）</span><code class="id">SR-SEC-SSRF-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">安全</span></summary>
+<details class="rule" id="SR-SEC-SSRF-001" data-no="119" data-group="SECURITY" data-severity="WARNING" data-target="java" data-search="119 sr-sec-ssrf-001 请求数据控制服务器 http 目标（ssrf） 注入">
+<summary><span class="no">119</span><span class="main"><span class="name">请求数据控制服务器 HTTP 目标（SSRF）</span><code class="id">SR-SEC-SSRF-001</code></span><span class="sev sev-WARNING">警告</span><span class="tag">安全</span></summary>
 <div class="body">
 <p class="description">复用方法内污点跟踪，识别 URL 连接、JDK HttpRequest 目标、Spring RestOperations、OkHttp 和 Apache HTTP 客户端。固定 HTTP 主机后的路径或查询不报告：字面量的协议和主机之后的文本（包括 String.format、MessageFormat、StringBuilder 构造的），以及配置的基准 URL（字段或局部变量）之后以 / ? # 开头的常量文本；用请求值从固定表里选择目标（Map.get）也不报告。URL 编码和一般字符串校验不能证明 SSRF 安全。跨方法、DNS 与重定向链不推断。</p>
 <dl class="facts"><dt>分类</dt><dd>注入</dd><dt>对象</dt><dd>Java</dd><dt>置信度</dt><dd>中</dd><dt>执行时机</dt><dd>每次审查</dd><dt>默认</dt><dd>启用</dd></dl>
