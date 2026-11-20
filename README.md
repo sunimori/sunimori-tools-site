@@ -46,8 +46,13 @@ like its other files.
 - **Java Impact Analyzer** — in the plug-in repository run
   `build.bat --publish`; it writes `eclipse/impact-analyzer/`,
   `impact-analyzer.zip` and `impact-analyzer/` (the release notes page) into
-  `SITE_DIR`. Copy those three paths over a clone of
-  this repository (or set `SITE_DIR` to the clone), then commit and push.
+  `SITE_DIR`. Put the release into a clone of this repository with
+  `node verify/publish-site.js <SITE_DIR> <clone>` (run in the plug-in repository),
+  then commit and push. Do not copy or delete the files by hand: the command keeps
+  the jars of the newest five versions under `eclipse/impact-analyzer/plugins/` and
+  `features/`, while the catalog offers only the latest. An Eclipse that read the
+  site before a release still asks for the jars of the version it saw, and fails
+  with "Artifact not found" when they are gone.
 - **SmartReviewer** — in its repository run
   `node scripts/publish-site.mjs --site <clone> --eclipse-repo <signed repository> --eclipse-zip <signed zip>`;
   it replaces `eclipse/smartreviewer/` and `smartreviewer/`. Commit and push.
