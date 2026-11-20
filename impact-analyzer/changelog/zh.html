@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090c10">
+<meta name="description" content="Java Impact Analyzer 的更新履历。">
+<title>更新履历 — Java Impact Analyzer</title>
+<link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="changelog.css">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+<a class="wordmark" href="../../index.html" title="返回 Sunimori Tools"><img src="../../assets/mark.svg" alt=""><span>Sunimori <b>Tools</b></span></a>
+<nav class="languages" aria-label="Language"><a href="ja.html" lang="ja">日本語</a><a href="zh.html" lang="zh" aria-current="page">中文</a><a href="en.html" lang="en">English</a></nav>
+</div></header>
+<main class="wrap">
+<section class="intro">
+<p class="eyebrow">Java Impact Analyzer</p>
+<h1>更新履历</h1>
+<p class="lead">按版本列出主要变化，新的在上。</p>
+</section>
+<ol class="releases">
+<li class="release" id="v1.1.0">
+<h2><a href="#v1.1.0">1.1.0</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>设置页新增「检查更新」（只在点击时联网）</li><li>版本号改为按功能升级</li><li>网站新增更新履历页</li></ul>
+</li>
+<li class="release" id="v1.0.0.202611191809">
+<h2><a href="#v1.0.0.202611191809">1.0.0.202611191809</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>调用树按类分组，同一调用者合并，参数默认折叠</li><li>变更集和「变更方法」面板按类分组</li><li>返回值流向的代码按方法合并显示</li><li>页面文字精简（中、日、英）</li><li>修复变更集很长时页面被撑宽</li></ul>
+</li>
+<li class="release" id="v1.0.0.202611191405">
+<h2><a href="#v1.0.0.202611191405">1.0.0.202611191405</a></h2>
+<p class="date"><time datetime="2026-11-19">2026-11-19</time></p>
+<ul><li>新增「返回值流向」：变更方法的返回值被谁接收、传到哪里、怎么用，报告里一并追踪</li></ul>
+</li>
+</ol>
+<p class="older">更早的版本未记录。</p>
+</main>
+<script>
+document.querySelectorAll(".languages a").forEach(function (link) {
+  link.addEventListener("click", function () {
+    try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+  });
+  if (location.hash) { link.href = link.getAttribute("href") + location.hash; }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090c10">
+<meta name="description" content="Release notes for Java Impact Analyzer.">
+<title>Release notes — Java Impact Analyzer</title>
+<link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="changelog.css">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+<a class="wordmark" href="../../index.html" title="Back to Sunimori Tools"><img src="../../assets/mark.svg" alt=""><span>Sunimori <b>Tools</b></span></a>
+<nav class="languages" aria-label="Language"><a href="ja.html" lang="ja">日本語</a><a href="zh.html" lang="zh">中文</a><a href="en.html" lang="en" aria-current="page">English</a></nav>
+</div></header>
+<main class="wrap">
+<section class="intro">
+<p class="eyebrow">Java Impact Analyzer</p>
+<h1>Release notes</h1>
+<p class="lead">Main changes in each release, newest first.</p>
+</section>
+<ol class="releases">
+<li class="release" id="v1.1.0">
+<h2><a href="#v1.1.0">1.1.0</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>&quot;Check for updates&quot; on the preference page (goes online only when clicked)</li><li>Version numbers now go up with each new feature</li><li>Release notes page on the website</li></ul>
+</li>
+<li class="release" id="v1.0.0.202611191809">
+<h2><a href="#v1.0.0.202611191809">1.0.0.202611191809</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>Call tree grouped by class; same callers merged; parameters folded by default</li><li>Change set and changed-method panel grouped by class</li><li>Return value usage code shown once per method</li><li>Shorter page text (English, Japanese, Chinese)</li><li>Fixed: a long change set no longer widens the page</li></ul>
+</li>
+<li class="release" id="v1.0.0.202611191405">
+<h2><a href="#v1.0.0.202611191405">1.0.0.202611191405</a></h2>
+<p class="date"><time datetime="2026-11-19">2026-11-19</time></p>
+<ul><li>New &quot;Return value usage&quot;: the report traces who receives a changed method&#39;s return value, where it goes and how it is used</li></ul>
+</li>
+</ol>
+<p class="older">Earlier versions are not recorded.</p>
+</main>
+<script>
+document.querySelectorAll(".languages a").forEach(function (link) {
+  link.addEventListener("click", function () {
+    try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+  });
+  if (location.hash) { link.href = link.getAttribute("href") + location.hash; }
+});
+</script>
+</body>
+</html>
