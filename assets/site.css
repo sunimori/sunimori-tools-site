@@ -235,6 +235,8 @@ svg { display: block; }
 .release-badges .signed { color: var(--green); border-color: rgba(118,215,173,.25); }
 .release-badges .preview { color: var(--amber); border-color: rgba(225,182,95,.3); }
 .release-badges > span[hidden] { display: none; }
+.release-badges > a { min-height: 28px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid rgba(125,184,242,.3); border-radius: 99px; color: var(--blue); font: 10px/1 var(--mono); text-decoration: none; transition: color .18s ease, border-color .18s ease, background .18s ease; }
+.release-badges > a:hover { color: var(--blue-bright); border-color: rgba(169,213,255,.5); background: rgba(125,184,242,.08); }
 .panel-summary[hidden] { display: none; }
 /* The feature sentences lose their leading number while the rule count is unknown: keep the first letter a capital. */
 .feature-list li > span::first-letter { text-transform: uppercase; }

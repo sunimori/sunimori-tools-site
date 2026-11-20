@@ -24,7 +24,7 @@ their SHA-256 checksums in `smartreviewer/SHA256SUMS`.
 | Path | Owner |
 |---|---|
 | `index.html`, `assets/`, `robots.txt`, `CNAME`, `.nojekyll` | this repository (edit the page here) |
-| `eclipse/impact-analyzer/`, `impact-analyzer.zip` | Java Impact Analyzer release |
+| `eclipse/impact-analyzer/`, `impact-analyzer.zip`, `impact-analyzer/` | Java Impact Analyzer release |
 | `eclipse/smartreviewer/`, `smartreviewer/` | SmartReviewer release |
 
 Each tool's release replaces only its own paths, so one tool's release never
@@ -37,12 +37,16 @@ shows the version of the built-in rule package, read from `smartreviewer/rule-pa
 `smartreviewer/rule-count.txt` (such as `140`). Both files are written by the SmartReviewer release.
 The SmartReviewer card also links to the rule page, `smartreviewer/rules/` (every built-in rule with its examples in Japanese,
 Chinese and English), which the SmartReviewer release generates and replaces like its other files.
+The Java Impact Analyzer card and its version badge link to the release notes, `impact-analyzer/changelog/`
+(Japanese, Chinese and English, dates only), which the Java Impact Analyzer release generates and replaces
+like its other files.
 
 ## Publishing a new build
 
 - **Java Impact Analyzer** — in the plug-in repository run
-  `build.bat --publish`; it writes `eclipse/impact-analyzer/` and
-  `impact-analyzer.zip` into `SITE_DIR`. Copy those two paths over a clone of
+  `build.bat --publish`; it writes `eclipse/impact-analyzer/`,
+  `impact-analyzer.zip` and `impact-analyzer/` (the release notes page) into
+  `SITE_DIR`. Copy those three paths over a clone of
   this repository (or set `SITE_DIR` to the clone), then commit and push.
 - **SmartReviewer** — in its repository run
   `node scripts/publish-site.mjs --site <clone> --eclipse-repo <signed repository> --eclipse-zip <signed zip>`;
