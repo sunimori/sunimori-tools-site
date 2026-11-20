@@ -9,6 +9,7 @@
   --ink-soft: #a5afbc;
   --ink-muted: #6f7b88;
   --blue: #7db8f2;
+  --blue-bright: #a9d5ff;
   --mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
   --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif;
 }
@@ -24,10 +25,22 @@ a { color: inherit; }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 14px; font-weight: 500; }
 .wordmark b { font-weight: 730; }
 .wordmark img { width: 30px; height: 30px; border-radius: 9px; }
-.languages { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
-.languages a { padding: 3px 11px; border-radius: 999px; color: var(--ink-soft); text-decoration: none; font-size: 13px; border: 1px solid transparent; }
-.languages a:hover { color: var(--ink); }
-.languages a[aria-current] { color: var(--ink); border-color: var(--line-strong); background: var(--surface-raised); }
+/* 言語の選択: 主站の下拉と同じ形(地球 + 今の言語 + 矢印、開くと一覧で今の言語に印)。<details> なので脚本なしでも開く */
+.language { position: relative; margin-left: auto; }
+.language summary { list-style: none; }
+.language summary::-webkit-details-marker { display: none; }
+.language-button { min-height: 37px; border: 1px solid var(--line); border-radius: 11px; display: inline-flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--ink-soft); background: rgba(255,255,255,.018); font-size: 12px; cursor: pointer; user-select: none; transition: color .18s, border-color .18s, background .18s; }
+.language-button:hover, .language[open] .language-button { color: var(--ink); border-color: var(--line-strong); background: rgba(255,255,255,.04); }
+.language svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.language-button .chevron { width: 12px; transition: transform .18s ease; }
+.language[open] .language-button .chevron { transform: rotate(180deg); }
+.language-menu { position: absolute; top: calc(100% + 9px); right: 0; z-index: 10; width: 208px; max-width: calc(100vw - 32px); margin: 0; padding: 7px; list-style: none; border: 1px solid var(--line-strong); border-radius: 14px; background: rgba(17, 22, 29, .96); box-shadow: 0 22px 70px rgba(0,0,0,.45); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.language-menu a { min-height: 39px; display: flex; align-items: center; gap: 9px; padding: 0 10px; border-radius: 9px; color: var(--ink-soft); font-size: 13px; text-decoration: none; }
+.language-menu a:hover, .language-menu a:focus-visible { color: var(--ink); background: rgba(255,255,255,.05); }
+.language-menu a[aria-current] { color: var(--blue-bright); }
+.language-menu .check { width: 14px; height: 14px; stroke-width: 2.4; opacity: 0; }
+.language-menu a[aria-current] .check { opacity: 1; }
+.language-menu small { margin-left: auto; color: var(--ink-muted); font: 10px var(--mono); letter-spacing: .06em; }
 
 .intro { padding-block: 44px 20px; }
 .eyebrow { margin: 0 0 12px; color: var(--blue); font: 600 11px/1.2 var(--mono); letter-spacing: .13em; text-transform: uppercase; }

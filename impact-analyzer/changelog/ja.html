@@ -12,7 +12,7 @@
 <body>
 <header class="topbar"><div class="wrap">
 <a class="wordmark" href="../../index.html" title="Sunimori Tools へ戻る"><img src="../../assets/mark.svg" alt=""><span>Sunimori <b>Tools</b></span></a>
-<nav class="languages" aria-label="Language"><a href="ja.html" lang="ja" aria-current="page">日本語</a><a href="zh.html" lang="zh">中文</a><a href="en.html" lang="en">English</a></nav>
+<details class="language"><summary class="language-button" aria-label="Language: 日本語"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"/></svg><span>日本語</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary><ul class="language-menu"><li><a href="ja.html" lang="ja" hreflang="ja" aria-current="page"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>日本語</span><small>JA</small></a></li><li><a href="zh.html" lang="zh" hreflang="zh"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>中文</span><small>ZH</small></a></li><li><a href="en.html" lang="en" hreflang="en"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>English</span><small>EN</small></a></li></ul></details>
 </div></header>
 <main class="wrap">
 <section class="intro">
@@ -21,8 +21,13 @@
 <p class="lead">主な変更をリリースごとに、新しい順で載せています。</p>
 </section>
 <ol class="releases">
+<li class="release" id="v1.1.1">
+<h2><a href="#v1.1.1">1.1.1.202611200500</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>戻り値の利用先のコード：札の文字を上下中央に、長い行でも札が切れないように</li><li>戻り値の利用先は個別に検収せず、呼び出し元の項目に含める</li><li>更新履歴に完全なバージョン番号を表示、言語はプルダウンで切り替え</li></ul>
+</li>
 <li class="release" id="v1.1.0">
-<h2><a href="#v1.1.0">1.1.0</a></h2>
+<h2><a href="#v1.1.0">1.1.0.202611200254</a></h2>
 <p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
 <ul><li>設定ページに「更新を確認」を追加（押した時だけ通信）</li><li>バージョン番号を機能追加ごとに上げる方式に変更</li><li>Web サイトに更新履歴ページを追加</li></ul>
 </li>
@@ -40,12 +45,22 @@
 <p class="older">これより前のバージョンは記録していません。</p>
 </main>
 <script>
-document.querySelectorAll(".languages a").forEach(function (link) {
-  link.addEventListener("click", function () {
-    try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+(function () {
+  var menu = document.querySelector(".language");
+  if (!menu) { return; }
+  menu.querySelectorAll(".language-menu a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+      link.setAttribute("href", link.getAttribute("href").split("#")[0] + location.hash);
+    });
   });
-  if (location.hash) { link.href = link.getAttribute("href") + location.hash; }
-});
+  document.addEventListener("click", function (event) {
+    if (menu.open && !menu.contains(event.target)) { menu.open = false; }
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+  });
+}());
 </script>
 </body>
 </html>

@@ -12,7 +12,7 @@
 <body>
 <header class="topbar"><div class="wrap">
 <a class="wordmark" href="../../index.html" title="Back to Sunimori Tools"><img src="../../assets/mark.svg" alt=""><span>Sunimori <b>Tools</b></span></a>
-<nav class="languages" aria-label="Language"><a href="ja.html" lang="ja">日本語</a><a href="zh.html" lang="zh">中文</a><a href="en.html" lang="en" aria-current="page">English</a></nav>
+<details class="language"><summary class="language-button" aria-label="Language: English"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"/></svg><span>English</span><svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary><ul class="language-menu"><li><a href="ja.html" lang="ja" hreflang="ja"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>日本語</span><small>JA</small></a></li><li><a href="zh.html" lang="zh" hreflang="zh"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>中文</span><small>ZH</small></a></li><li><a href="en.html" lang="en" hreflang="en" aria-current="page"><svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span>English</span><small>EN</small></a></li></ul></details>
 </div></header>
 <main class="wrap">
 <section class="intro">
@@ -21,8 +21,13 @@
 <p class="lead">Main changes in each release, newest first.</p>
 </section>
 <ol class="releases">
+<li class="release" id="v1.1.1">
+<h2><a href="#v1.1.1">1.1.1.202611200500</a></h2>
+<p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
+<ul><li>Return value usage code: tag text is centered, and tags are no longer cut off on long lines</li><li>Return value usage is no longer reviewed on its own; the caller&#39;s item covers it</li><li>Release notes show the full version number; pick the language from a menu</li></ul>
+</li>
 <li class="release" id="v1.1.0">
-<h2><a href="#v1.1.0">1.1.0</a></h2>
+<h2><a href="#v1.1.0">1.1.0.202611200254</a></h2>
 <p class="date"><time datetime="2026-11-20">2026-11-20</time></p>
 <ul><li>&quot;Check for updates&quot; on the preference page (goes online only when clicked)</li><li>Version numbers now go up with each new feature</li><li>Release notes page on the website</li></ul>
 </li>
@@ -40,12 +45,22 @@
 <p class="older">Earlier versions are not recorded.</p>
 </main>
 <script>
-document.querySelectorAll(".languages a").forEach(function (link) {
-  link.addEventListener("click", function () {
-    try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+(function () {
+  var menu = document.querySelector(".language");
+  if (!menu) { return; }
+  menu.querySelectorAll(".language-menu a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      try { localStorage.setItem("sunimori.language", link.lang); } catch (ignore) { /* Works without storage. */ }
+      link.setAttribute("href", link.getAttribute("href").split("#")[0] + location.hash);
+    });
   });
-  if (location.hash) { link.href = link.getAttribute("href") + location.hash; }
-});
+  document.addEventListener("click", function (event) {
+    if (menu.open && !menu.contains(event.target)) { menu.open = false; }
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+  });
+}());
 </script>
 </body>
 </html>
