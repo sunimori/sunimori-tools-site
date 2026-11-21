@@ -21,6 +21,11 @@
 <p class="lead">Main changes in each release, newest first.</p>
 </section>
 <ol class="releases">
+<li class="release" id="v1.4.0">
+<h2><a href="#v1.4.0">1.4.0.202611211644</a></h2>
+<p class="date"><time datetime="2026-11-22">2026-11-22</time></p>
+<ul><li>Backend calls of a changed script are sorted by closeness to the change, folding result-only and unrelated ones (direct calls in one file; needs the JS parser)</li><li>A page or script you right-click is compared with its last committed version when it has local changes, giving changed-line marks and closeness</li><li>Right-clicking a non-Java folder (under WebContent, for example) offers the analysis too, choosing the change set within it</li><li>Scripts list their changed functions with code; each backend call shows its function and why it got its tier; with no changes, calls are grouped by function</li><li>Starting the analysis inside a function in a script editor takes that function as the change</li></ul>
+</li>
 <li class="release" id="v1.3.0">
 <h2><a href="#v1.3.0">1.3.0.202611202344</a></h2>
 <p class="date"><time datetime="2026-11-21">2026-11-21</time></p>
